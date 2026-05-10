@@ -3,6 +3,7 @@ import { makeSignUpController } from '../factories/signup.factory';
 import { validateBody } from '../../../configs/validate.schema.moddleware';
 import { signUpBodySchema } from '../validators/signup.schema';
 import { makeSignInController } from '../factories/singin.factory';
+import { signInBodySchema } from '../validators/signin.schema';
 
 const router = Router();
 
@@ -77,8 +78,11 @@ const signInController = makeSignInController();
  *       500:
  *         description: Erro interno do servidor
  */
-router.post('/signin', (request: Request, response: Response) =>
-  signInController.handle(request, response)
+router.post(
+  '/signin',
+  validateBody(signInBodySchema),
+  (request: Request, response: Response) =>
+    signInController.handle(request, response)
 );
 
 export default router;
