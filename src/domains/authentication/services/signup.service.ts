@@ -1,4 +1,5 @@
 import { ILoggerService } from '../../../configs/logger';
+import { UserEntity } from '../../users/entity/user.entity';
 import { IUserRepository } from '../../users/interfaces/user.interaces';
 import {
   SignUpServiceDependencies,
@@ -15,9 +16,10 @@ export class SignUpService {
     this.logging = params.logging;
   }
 
-  async execute(
-    params: SignUpServiceParams
-  ): Promise<{ status: number; body: any }> {
+  async execute(params: SignUpServiceParams): Promise<{
+    status: number;
+    body: { message?: string; user?: UserEntity };
+  }> {
     try {
       const { name, login, password } = params;
       this.logging.info('Iniciando processo de cadastro', { name, login });
@@ -36,8 +38,8 @@ export class SignUpService {
         password: hashedPassword
       });
 
-      return { status: 201, body: { newUser } };
-    } catch (error) {
+      return { status: 201, body: { user: newUser } };
+    } catch (error: any) {
       console.log(error);
       this.logging.error('Erro ao cadastrar usuário', { error });
       return { status: 400, body: { message: error.message } };
