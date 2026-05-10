@@ -3,8 +3,7 @@ import {
   signUpServiceMock,
   loggingMock,
   userRepositoryMock
-} from './signup.service.mock';
-import { SignUpService } from '../../../src/domains/authentication/services/signup.service';
+} from '../mocks/signup.service.mock';
 
 describe('SignUpService', () => {
   beforeEach(() => {

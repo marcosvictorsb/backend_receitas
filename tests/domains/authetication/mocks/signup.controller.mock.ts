@@ -1,6 +1,5 @@
 import { vi } from 'vitest';
-import { ILoggerService } from '../../../src/configs/logger';
-import { SignUpService } from '../../../src/domains/authentication/services/signup.service';
+import { SignUpController } from '../../../../src/domains/authentication/controllers/signup.controller';
 
 class UserRepositoryMock {
   find = vi.fn() as ReturnType<typeof vi.fn>;
@@ -14,9 +13,14 @@ class CreateLoggerMock {
   debug = vi.fn() as ReturnType<typeof vi.fn>;
 }
 
+class SignUpServiceMock {
+  execute = vi.fn() as ReturnType<typeof vi.fn>;
+}
+
 export const userRepositoryMock = new UserRepositoryMock();
 export const loggingMock = new CreateLoggerMock();
-export const signUpServiceMock = new SignUpService({
-  userRepository: userRepositoryMock,
-  logging: loggingMock
+export const signUpServiceMock = new SignUpServiceMock();
+
+export const signUpControllerMock = new SignUpController({
+  service: signUpServiceMock
 });

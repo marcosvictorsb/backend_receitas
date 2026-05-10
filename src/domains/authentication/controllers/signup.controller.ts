@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { SignUpParams, SignUpService } from '../interfaces/signup.interfaces';
+import { UserEntity } from '../../users/entity/user.entity';
 
 export class SignUpController {
   protected service: SignUpService;
