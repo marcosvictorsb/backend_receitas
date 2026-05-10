@@ -14,7 +14,12 @@ export default defineConfig({
         '**/*.spec.ts',
         '**/*.test.ts',
         'src/configs/**',
-        'src/infra/**'
+        'src/infra/**',
+        'src/domains/**/factories/**',
+        'src/domains/**/routes/**',
+        'src/domains/**/entity/**',
+        'src/domains/**/interfaces/**',
+        'src/domains/**/models/**'
       ]
     }
   }
