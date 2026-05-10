@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import { makeSignUpController } from '../factories/signup.factory';
 import { validateBody } from '../../../configs/validate.schema.moddleware';
 import { signUpBodySchema } from '../validators/signup.schema';
+import { makeSignInController } from '../factories/singin.factory';
 
 const router = Router();
 
@@ -42,6 +43,12 @@ router.post(
   validateBody(signUpBodySchema),
   (request: Request, response: Response) =>
     signUpController.handle(request, response)
+);
+
+const signInController = makeSignInController();
+
+router.post('/signin', (request: Request, response: Response) =>
+  signInController.handle(request, response)
 );
 
 export default router;
