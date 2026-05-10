@@ -47,6 +47,36 @@ router.post(
 
 const signInController = makeSignInController();
 
+/**
+ * @openapi
+ * /v1/auth/signin:
+ *   post:
+ *     tags:
+ *       - Authentication
+ *     summary: Realiza login do usuario
+ *     description: Valida login e senha e retorna um token JWT.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/SignInBody'
+ *     responses:
+ *       200:
+ *         description: Login realizado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/SignInSuccess'
+ *       400:
+ *         description: Login ou senha incorretos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       500:
+ *         description: Erro interno do servidor
+ */
 router.post('/signin', (request: Request, response: Response) =>
   signInController.handle(request, response)
 );

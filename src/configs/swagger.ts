@@ -38,6 +38,23 @@ export const swaggerSpec = swaggerJSDoc({
             }
           }
         },
+        SignInBody: {
+          type: 'object',
+          required: ['login', 'password'],
+          properties: {
+            login: { type: 'string', example: 'usuario123' },
+            password: { type: 'string', example: 'Senha123' }
+          }
+        },
+        SignInSuccess: {
+          type: 'object',
+          properties: {
+            token: {
+              type: 'string',
+              example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.exemplo.token'
+            }
+          }
+        },
         ErrorResponse: {
           type: 'object',
           properties: {
