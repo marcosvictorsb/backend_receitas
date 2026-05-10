@@ -2,12 +2,12 @@ import { sequelize } from '../../../infra/database/models';
 import { DataTypes, Model } from 'sequelize';
 
 class UserModel extends Model {
-  declare id: number;
+  declare id?: number;
   declare name: string;
   declare login: string;
   declare password: string;
-  declare created_at: Date;
-  declare updated_at: Date;
+  declare created_at?: Date;
+  declare updated_at?: Date;
 }
 
 UserModel.init(

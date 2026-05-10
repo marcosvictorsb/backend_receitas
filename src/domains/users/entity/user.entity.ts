@@ -1,24 +1,24 @@
 export class UserEntity {
   public readonly id?: number;
-  public name: string;
-  public login: string;
-  public password: string;
-  public created_at?: Date;
-  public updated_at?: Date;
+  public readonly name: string;
+  public readonly login: string;
+  public readonly password: string;
+  public readonly created_at?: Date;
+  public readonly updated_at?: Date;
 
   constructor(params: {
     id?: number;
-    nome: string;
+    name: string;
     login: string;
-    senha: string;
-    criado_em?: Date;
-    alterado_em?: Date;
+    password: string;
+    created_at?: Date;
+    updated_at?: Date;
   }) {
-    this.id = params.id;
-    this.name = params.nome;
+    this.id = params?.id;
+    this.name = params.name;
     this.login = params.login;
-    this.password = params.senha;
-    this.created_at = params.criado_em;
-    this.updated_at = params.alterado_em;
+    this.password = params.password;
+    this.created_at = params?.created_at;
+    this.updated_at = params?.updated_at;
   }
 }
