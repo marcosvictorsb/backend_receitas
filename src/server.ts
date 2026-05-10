@@ -1,6 +1,8 @@
 import express, { Express, Request, Response } from 'express';
 import 'dotenv/config';
 import routers from './configs/routers';
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './configs/swagger';
 
 const app: Express = express();
 const port = process.env.PORT || 3000;
@@ -12,6 +14,8 @@ app.get('/', (_request: Request, response: Response) => {
     message: 'projeto receitas'
   });
 });
+
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(routers);
 
