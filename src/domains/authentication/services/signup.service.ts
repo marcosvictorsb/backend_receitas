@@ -12,13 +12,16 @@ export class SignUpService {
   protected logging: ILoggerService;
 
   constructor(params: SignUpServiceDependencies) {
-    this.userRepository = params.repository;
+    this.userRepository = params.userRepository;
     this.logging = params.logging;
   }
 
   async execute(params: SignUpServiceParams): Promise<{
     status: number;
-    body: { message?: string; user?: UserEntity };
+    body: {
+      message?: string;
+      user?: Pick<UserEntity, 'id' | 'name' | 'login'>;
+    };
   }> {
     try {
       const { name, login, password } = params;
@@ -26,7 +29,7 @@ export class SignUpService {
 
       const user = await this.userRepository.find({ login });
       if (user) {
-        this.logging.error('Login já existe', { login });
+        this.logging.info('Login já existe', { login });
         return { status: 400, body: { message: 'Login já existe' } };
       }
 
@@ -38,11 +41,15 @@ export class SignUpService {
         password: hashedPassword
       });
 
-      return { status: 201, body: { user: newUser } };
+      return {
+        status: 201,
+        body: {
+          user: { id: newUser.id, name: newUser.name, login: newUser.login }
+        }
+      };
     } catch (error: any) {
-      console.log(error);
       this.logging.error('Erro ao cadastrar usuário', { error });
-      return { status: 400, body: { message: error.message } };
+      return { status: 500, body: { message: error.message } };
     }
   }
 

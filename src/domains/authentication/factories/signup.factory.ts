@@ -7,7 +7,7 @@ import { SignUpService } from '../services/signup.service';
 export const makeSignUpController = () => {
   const userRepository = new UserRepository({ model: UserModel, logging });
   const signUpService = new SignUpService({
-    repository: userRepository,
+    userRepository: userRepository,
     logging
   });
   const signUpController = new SignUpController({ service: signUpService });

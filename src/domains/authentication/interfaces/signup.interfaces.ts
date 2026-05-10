@@ -2,7 +2,7 @@ import { ILoggerService } from '../../../configs/logger';
 import { IUserRepository } from '../../users/interfaces/user.interaces';
 
 export interface SignUpServiceDependencies {
-  repository: IUserRepository;
+  userRepository: IUserRepository;
   logging: ILoggerService;
 }
 
