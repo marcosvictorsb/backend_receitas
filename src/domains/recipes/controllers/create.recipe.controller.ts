@@ -13,7 +13,6 @@ export class CreateRecipeController {
 
   async handle(request: Request, response: Response) {
     const {
-      id_user,
       id_category,
       name,
       preparation_time_minutes,
@@ -21,6 +20,7 @@ export class CreateRecipeController {
       preparation_method,
       ingredients
     } = request.body;
+    const id_user = Number(request.user?.id);
 
     const { status, body } = await this.service.execute({
       id_user,
