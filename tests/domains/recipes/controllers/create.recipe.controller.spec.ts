@@ -19,8 +19,7 @@ describe('CreateRecipeController', () => {
 
   it('should create a new recipe', async () => {
     const params = {
-      id_user: 'user_id',
-      id_category: 'category_id',
+      id_category: 2,
       name: 'Recipe Name',
       preparation_time_minutes: 30,
       servings: 4,
@@ -39,7 +38,10 @@ describe('CreateRecipeController', () => {
     });
 
     const request: any = {
-      body: params
+      body: params,
+      user: {
+        id: 22
+      }
     };
     const response = makeResponseMock();
 
@@ -52,7 +54,10 @@ describe('CreateRecipeController', () => {
         ...params
       }
     });
-    expect(serviceMock.execute).toHaveBeenCalledWith(params);
+    expect(serviceMock.execute).toHaveBeenCalledWith({
+      id_user: Number(request.user.id),
+      ...params
+    });
     expect(serviceMock.execute).toHaveBeenCalledTimes(1);
   });
 });
