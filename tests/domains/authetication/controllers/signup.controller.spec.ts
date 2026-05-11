@@ -3,14 +3,7 @@ import {
   signUpServiceMock,
   signUpControllerMock
 } from '../mocks/signup.controller.mock';
-import { Response } from 'express';
-
-export function makeResponseMock(): Response {
-  const res: Response = {} as Response;
-  res.status = vi.fn().mockReturnValue(res);
-  res.json = vi.fn().mockReturnValue(res);
-  return res;
-}
+import { makeResponseMock } from '../../../mocks/response.mock';
 
 describe('SignUpController', () => {
   beforeEach(() => {
