@@ -35,12 +35,11 @@ export const authMiddleware = (
       }
 
       const payload = decoded as {
-        id: number;
-        id_company: number;
-        name?: string;
+        userId: number;
       };
+
       request.user = {
-        id: payload.id
+        id: payload.userId
       };
 
       return next();
