@@ -2,7 +2,7 @@ import { vi } from 'vitest';
 import { CreateRecipeService } from '../../../../src/domains/recipes/services/create.recipe.service';
 import { LoggerMock } from '../../../mocks/logger.mock';
 
-class RecipeRepositoryMock {
+export class RecipeRepositoryMock {
   create = vi.fn() as ReturnType<typeof vi.fn>;
   findAll = vi.fn() as ReturnType<typeof vi.fn>;
   delete = vi.fn() as ReturnType<typeof vi.fn>;
