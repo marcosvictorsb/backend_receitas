@@ -1,13 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { UserRepository } from '../../../../src/domains/users/repository/user.repository';
 import { ModelStatic } from 'sequelize';
-
-class LoggerMock {
-  info = vi.fn() as ReturnType<typeof vi.fn>;
-  error = vi.fn() as ReturnType<typeof vi.fn>;
-  warn = vi.fn() as ReturnType<typeof vi.fn>;
-  debug = vi.fn() as ReturnType<typeof vi.fn>;
-}
+import { LoggerMock } from '../../../mocks/logger.mock';
 
 const modelMock = {
   findOne: vi.fn(),
