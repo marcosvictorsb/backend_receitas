@@ -1,5 +1,5 @@
 import { logging } from '../../../configs/logger';
-import { CreateRecipeController } from '../controllers/create.receipe.controller';
+import { CreateRecipeController } from '../controllers/create.recipe.controller';
 import RecipeModel from '../model/recipe.model';
 import { RecipeRepository } from '../repository/recipe.repository';
 import { CreateRecipeService } from '../services/create.recipe.service';

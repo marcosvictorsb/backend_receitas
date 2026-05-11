@@ -1,10 +1,13 @@
 import { Request, Response } from 'express';
-import { CreateRecipeService } from '../services/create.recipe.service';
+import {
+  CreateRecipeControllerDependencies,
+  ICreateRecipeService
+} from '../interfaces/create.recipe.interface';
 
 export class CreateRecipeController {
-  protected service: CreateRecipeService;
+  protected service: ICreateRecipeService;
 
-  constructor(params: { service: CreateRecipeService }) {
+  constructor(params: CreateRecipeControllerDependencies) {
     this.service = params.service;
   }
 
