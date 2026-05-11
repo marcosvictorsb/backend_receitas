@@ -16,10 +16,13 @@ export default defineConfig({
         'src/configs/**',
         'src/infra/**',
         'src/domains/**/factories/**',
+        'src/domains/**/factory/**',
+        'src/domains/**/validators/**',
         'src/domains/**/routes/**',
         'src/domains/**/entity/**',
         'src/domains/**/interfaces/**',
-        'src/domains/**/models/**'
+        'src/domains/**/models/**',
+        'src/domains/**/model/**'
       ]
     }
   }

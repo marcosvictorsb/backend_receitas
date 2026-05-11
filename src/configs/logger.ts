@@ -1,17 +1,20 @@
 import winston, { Logger } from 'winston';
 import path from 'path';
+import util from 'util';
 
 export interface ILoggerService {
-  info(message: string, meta?: any): void;
-  error(message: string, error?: any): void;
-  warn(message: string, meta?: any): void;
-  debug(message: string, meta?: any): void;
+  info(message: string, meta?: unknown): void;
+  error(message: string, error?: unknown): void;
+  warn(message: string, meta?: unknown): void;
+  debug(message: string, meta?: unknown): void;
 }
 
 class LoggerService implements ILoggerService {
   private logger: Logger;
 
   constructor() {
+    const isProduction = process.env.NODE_ENV === 'production';
+
     this.logger = winston.createLogger({
       level: process.env.LOG_LEVEL || 'info',
       format: winston.format.combine(
@@ -31,32 +34,84 @@ class LoggerService implements ILoggerService {
       ]
     });
 
-    if (process.env.NODE_ENV !== 'production') {
+    if (!isProduction) {
       this.logger.add(
         new winston.transports.Console({
           format: winston.format.combine(
-            winston.format.colorize(),
-            winston.format.simple()
+            winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+            winston.format.errors({ stack: true }),
+            winston.format.colorize({ all: true }),
+            winston.format.printf((info) => {
+              const { timestamp, level, message, service, ...meta } = info;
+              const base = `[${timestamp}] [${service}] ${level}: ${message}`;
+
+              if (Object.keys(meta).length === 0) {
+                return base;
+              }
+
+              return `${base}\n${util.inspect(meta, {
+                colors: true,
+                depth: 6,
+                compact: false,
+                breakLength: 120
+              })}`;
+            })
           )
         })
       );
     }
   }
 
-  info(message: string, meta?: any): void {
-    this.logger.info(message, meta);
+  info(message: string, meta?: unknown): void {
+    this.logger.info(message, this.normalizeMeta(meta));
   }
 
-  error(message: string, error?: any): void {
-    this.logger.error(message, error);
+  error(message: string, error?: unknown): void {
+    this.logger.error(message, this.normalizeError(error));
   }
 
-  warn(message: string, meta?: any): void {
-    this.logger.warn(message, meta);
+  warn(message: string, meta?: unknown): void {
+    this.logger.warn(message, this.normalizeMeta(meta));
   }
 
-  debug(message: string, meta?: any): void {
-    this.logger.debug(message, meta);
+  debug(message: string, meta?: unknown): void {
+    this.logger.debug(message, this.normalizeMeta(meta));
+  }
+
+  private normalizeMeta(meta?: unknown): Record<string, unknown> | undefined {
+    if (meta === undefined) {
+      return undefined;
+    }
+
+    if (meta instanceof Error) {
+      return {
+        error: {
+          name: meta.name,
+          message: meta.message,
+          stack: meta.stack
+        }
+      };
+    }
+
+    return { meta };
+  }
+
+  private normalizeError(error?: unknown): Record<string, unknown> | undefined {
+    if (error === undefined) {
+      return undefined;
+    }
+
+    if (error instanceof Error) {
+      return {
+        error: {
+          name: error.name,
+          message: error.message,
+          stack: error.stack
+        }
+      };
+    }
+
+    return { error };
   }
 }
 
