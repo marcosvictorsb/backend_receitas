@@ -1,6 +1,5 @@
 import winston, { Logger } from 'winston';
 import path from 'path';
-import util from 'util';
 
 export interface ILoggerService {
   info(message: string, meta?: unknown): void;
@@ -42,19 +41,32 @@ class LoggerService implements ILoggerService {
             winston.format.errors({ stack: true }),
             winston.format.colorize({ all: true }),
             winston.format.printf((info) => {
-              const { timestamp, level, message, service, ...meta } = info;
+              const { timestamp, level, message, service, meta, error } = info;
               const base = `[${timestamp}] [${service}] ${level}: ${message}`;
 
-              if (Object.keys(meta).length === 0) {
-                return base;
+              // Se há metadados aninhados em `meta`, limpar undefined
+              if (meta && typeof meta === 'object') {
+                const cleanMeta = Object.entries(meta)
+                  .filter(([, value]) => value !== undefined)
+                  .reduce(
+                    (acc, [key, value]) => {
+                      acc[key] = value;
+                      return acc;
+                    },
+                    {} as Record<string, unknown>
+                  );
+
+                if (Object.keys(cleanMeta).length > 0) {
+                  return `${base}\n${JSON.stringify(cleanMeta, null, 2)}`;
+                }
               }
 
-              return `${base}\n${util.inspect(meta, {
-                colors: true,
-                depth: 6,
-                compact: false,
-                breakLength: 120
-              })}`;
+              // Se há erro aninhado
+              if (error && typeof error === 'object') {
+                return `${base}\n${JSON.stringify(error, null, 2)}`;
+              }
+
+              return base;
             })
           )
         })
