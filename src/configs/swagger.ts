@@ -15,6 +15,14 @@ export const swaggerSpec = swaggerJSDoc({
       }
     ],
     components: {
+      securitySchemes: {
+        BearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+          description: 'Token JWT para autenticação'
+        }
+      },
       schemas: {
         SignUpBody: {
           type: 'object',
@@ -59,6 +67,73 @@ export const swaggerSpec = swaggerJSDoc({
           type: 'object',
           properties: {
             message: { type: 'string', example: 'Login já existe' }
+          }
+        },
+        RecipeObject: {
+          type: 'object',
+          properties: {
+            id: { type: 'number', example: 1 },
+            name: { type: 'string', example: 'Bolo de Chocolate' },
+            preparation_time_minutes: { type: 'number', example: 30 },
+            servings: { type: 'number', example: 8 },
+            preparation_method: {
+              type: 'string',
+              example: 'Misture os ingredientes e asse a 180°C'
+            },
+            ingredients: {
+              type: 'string',
+              example: 'Chocolate, ovos, açúcar, farinha'
+            },
+            id_category: { type: 'number', example: 1 },
+            id_user: { type: 'number', example: 1 },
+            created_at: {
+              type: 'string',
+              format: 'date-time',
+              example: '2026-05-11T10:30:00Z'
+            },
+            updated_at: {
+              type: 'string',
+              format: 'date-time',
+              example: '2026-05-11T10:30:00Z'
+            }
+          }
+        },
+        CreateRecipeBody: {
+          type: 'object',
+          required: ['preparation_method', 'ingredients', 'id_user'],
+          properties: {
+            name: { type: 'string', example: 'Bolo de Chocolate' },
+            preparation_time_minutes: { type: 'number', example: 30 },
+            servings: { type: 'number', example: 8 },
+            preparation_method: {
+              type: 'string',
+              example: 'Misture os ingredientes e asse a 180°C'
+            },
+            ingredients: {
+              type: 'string',
+              example: 'Chocolate, ovos, açúcar, farinha'
+            },
+            id_category: { type: 'number', example: 1 },
+            id_user: { type: 'number', example: 1 }
+          }
+        },
+        CreateRecipeSuccess: {
+          type: 'object',
+          properties: {
+            recipe: {
+              $ref: '#/components/schemas/RecipeObject'
+            }
+          }
+        },
+        FindRecipeSuccess: {
+          type: 'object',
+          properties: {
+            recipes: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/RecipeObject'
+              }
+            }
           }
         }
       }
