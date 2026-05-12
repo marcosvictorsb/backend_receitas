@@ -38,7 +38,7 @@ export class UpdateRecipeService {
 
       const existingRecipe = await this.recipeRepository.find({ id, id_user });
       if (!existingRecipe) {
-        this.logging.warn(
+        this.logging.info(
           `Receita com id ${id} não encontrada para atualização`
         );
         return { status: 404, body: { message: 'Recipe not found' } };
