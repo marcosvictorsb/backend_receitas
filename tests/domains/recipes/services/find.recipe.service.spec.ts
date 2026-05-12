@@ -3,7 +3,7 @@ import {
   findRecipeServiceMock,
   loggingMock,
   recipeRepositoryMock
-} from '../mocks/find.service.mock';
+} from '../mocks/find.recipe.service.mock';
 
 describe('FindRecipeService', () => {
   beforeEach(() => {
