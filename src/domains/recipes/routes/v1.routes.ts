@@ -11,6 +11,7 @@ import { authMiddleware } from '../../../middlewares/auth.jwt.middleware';
 import { makeDeleteRecipeController } from '../factory/delete.recipe.factory';
 import { findRecipeQuerySchema } from '../validators/find.recipe.schema';
 import { deleteRecipeParamsSchema } from '../validators/delete.recipe.schema';
+import { makeUpdateRecipeController } from '../factory/update.recipe.factory';
 
 const router = Router();
 
@@ -180,6 +181,16 @@ router.delete(
   validateParams(deleteRecipeParamsSchema),
   (request: Request, response: Response) =>
     deleteRecipeController.handle(request, response)
+);
+
+const updateRecipeController = makeUpdateRecipeController();
+
+router.put(
+  '/:id',
+  authMiddleware,
+  validateBody(createRecipeBodySchema),
+  (request: Request, response: Response) =>
+    updateRecipeController.handle(request, response)
 );
 
 export default router;

@@ -23,6 +23,8 @@ export type DeleteRecipeCriteria = {
 };
 
 export type UpdateRecipeCriteria = {
+  id: number;
+  id_user: number;
   id_category?: number;
   name?: string;
   preparation_time_minutes?: number;
