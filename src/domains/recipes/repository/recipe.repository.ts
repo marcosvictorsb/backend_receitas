@@ -83,16 +83,20 @@ export class RecipeRepository implements IRecipeRepository {
     return true;
   }
 
-  async update(params: UpdateRecipeCriteria): Promise<RecipeEntity> {
+  async update(
+    data: UpdateRecipeCriteria,
+    params: { id: number; id_user: number }
+  ): Promise<RecipeEntity> {
     this.logging.info('Atualizando receita');
-    const [affectedRows, [updatedRecipe]] = await this.model.update(params, {
-      where: { id: params.id },
+    const [affectedRows, [updatedRecipe]] = await this.model.update(data, {
+      where: { id: params.id, id_user: params.id_user },
       returning: true
     });
 
     if (affectedRows === 0) {
       this.logging.info('Receita não encontrada para atualização', {
-        id: params.id
+        id: params.id,
+        id_user: params.id_user
       });
       throw new Error('Recipe not found');
     }

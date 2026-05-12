@@ -23,14 +23,12 @@ export type DeleteRecipeCriteria = {
 };
 
 export type UpdateRecipeCriteria = {
-  id: number;
-  id_user: number;
   id_category?: number;
   name?: string;
-  preparation_time_minutes: number;
+  preparation_time_minutes?: number;
   servings?: number;
   preparation_method?: string;
-  ingredients: string;
+  ingredients?: string;
 };
 
 export interface IRecipeRepository {
@@ -38,5 +36,8 @@ export interface IRecipeRepository {
   findAll(params: FindRecipeCriteria): Promise<RecipeEntity[]>;
   create(params: CreateRecipeCriteria): Promise<RecipeEntity>;
   delete(params: DeleteRecipeCriteria): Promise<boolean>;
-  update(params: UpdateRecipeCriteria): Promise<RecipeEntity>;
+  update(
+    data: UpdateRecipeCriteria,
+    params: { id: number; id_user: number }
+  ): Promise<RecipeEntity>;
 }

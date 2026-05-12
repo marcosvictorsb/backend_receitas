@@ -96,7 +96,7 @@ describe('RecipeRepository', () => {
 
   describe('delete', () => {
     it('should delete a recipe by id', async () => {
-      const params = { id: 1 };
+      const params = { id: 1, id_user: 1 };
       modelMock.destroy.mockResolvedValue(1);
 
       const result = await recipeRepositoryMock.delete(params);
@@ -104,13 +104,13 @@ describe('RecipeRepository', () => {
       expect(result).toBe(true);
       expect(logging.info).toHaveBeenCalledWith('Deletando receita');
       expect(modelMock.destroy).toHaveBeenCalledWith({
-        where: { id: params.id }
+        where: { id: params.id, id_user: params.id_user }
       });
       expect(modelMock.destroy).toHaveBeenCalledTimes(1);
     });
 
     it('should return false if recipe not found for deletion', async () => {
-      const params = { id: 999 };
+      const params = { id: 999, id_user: 1 };
       modelMock.destroy.mockResolvedValue(0);
 
       const result = await recipeRepositoryMock.delete(params);
@@ -120,11 +120,12 @@ describe('RecipeRepository', () => {
       expect(logging.info).toHaveBeenCalledWith(
         'Receita não encontrada para deleção',
         {
-          id: params.id
+          id: params.id,
+          id_user: params.id_user
         }
       );
       expect(modelMock.destroy).toHaveBeenCalledWith({
-        where: { id: params.id }
+        where: { id: params.id, id_user: params.id_user }
       });
       expect(modelMock.destroy).toHaveBeenCalledTimes(1);
     });
@@ -147,14 +148,31 @@ describe('RecipeRepository', () => {
       };
       modelMock.update.mockResolvedValue([1, [updatedRecipeData]]);
 
-      const recipe = await recipeRepositoryMock.update(params);
+      const recipe = await recipeRepositoryMock.update(
+        {
+          id_category: params.id_category,
+          name: params.name,
+          preparation_time_minutes: params.preparation_time_minutes,
+          servings: params.servings,
+          preparation_method: params.preparation_method,
+          ingredients: params.ingredients
+        },
+        { id: params.id, id_user: params.id_user }
+      );
 
       expect(recipe).toEqual(updatedRecipeData);
       expect(logging.info).toHaveBeenCalledWith('Atualizando receita');
-      expect(modelMock.update).toHaveBeenCalledWith(params, {
-        where: { id: params.id },
-        returning: true
-      });
+      expect(modelMock.update).toHaveBeenCalledWith(
+        {
+          id_category: params.id_category,
+          name: params.name,
+          preparation_time_minutes: params.preparation_time_minutes,
+          servings: params.servings,
+          preparation_method: params.preparation_method,
+          ingredients: params.ingredients
+        },
+        { where: { id: params.id, id_user: params.id_user }, returning: true }
+      );
       expect(modelMock.update).toHaveBeenCalledTimes(1);
     });
 
@@ -171,21 +189,39 @@ describe('RecipeRepository', () => {
       };
       modelMock.update.mockResolvedValue([0, []]);
 
-      await expect(recipeRepositoryMock.update(params)).rejects.toThrow(
-        'Recipe not found'
-      );
+      await expect(
+        recipeRepositoryMock.update(
+          {
+            id_category: params.id_category,
+            name: params.name,
+            preparation_time_minutes: params.preparation_time_minutes,
+            servings: params.servings,
+            preparation_method: params.preparation_method,
+            ingredients: params.ingredients
+          },
+          { id: params.id, id_user: params.id_user }
+        )
+      ).rejects.toThrow('Recipe not found');
 
       expect(logging.info).toHaveBeenCalledWith('Atualizando receita');
       expect(logging.info).toHaveBeenCalledWith(
         'Receita não encontrada para atualização',
         {
-          id: params.id
+          id: params.id,
+          id_user: params.id_user
         }
       );
-      expect(modelMock.update).toHaveBeenCalledWith(params, {
-        where: { id: params.id },
-        returning: true
-      });
+      expect(modelMock.update).toHaveBeenCalledWith(
+        {
+          id_category: params.id_category,
+          name: params.name,
+          preparation_time_minutes: params.preparation_time_minutes,
+          servings: params.servings,
+          preparation_method: params.preparation_method,
+          ingredients: params.ingredients
+        },
+        { where: { id: params.id, id_user: params.id_user }, returning: true }
+      );
       expect(modelMock.update).toHaveBeenCalledTimes(1);
     });
   });
