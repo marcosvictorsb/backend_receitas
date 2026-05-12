@@ -135,6 +135,12 @@ export const swaggerSpec = swaggerJSDoc({
               }
             }
           }
+        },
+        DeleteRecipeSuccess: {
+          type: 'object',
+          properties: {
+            message: { type: 'string', example: 'Receita deletada com sucesso' }
+          }
         }
       }
     }

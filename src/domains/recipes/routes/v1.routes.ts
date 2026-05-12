@@ -1,10 +1,16 @@
 import { Router, Request, Response } from 'express';
 import { makeCreateRecipeController } from '../factory/create.recipe.factory';
-import { validateBody } from '../../../configs/validate.schema.moddleware';
+import {
+  validateBody,
+  validateParams,
+  validateQuery
+} from '../../../configs/validate.schema.moddleware';
 import { createRecipeBodySchema } from '../validators/create.recipe.schema';
 import { makeFindRecipeController } from '../factory/find.recipe.factory';
 import { authMiddleware } from '../../../middlewares/auth.jwt.middleware';
 import { makeDeleteRecipeController } from '../factory/delete.recipe.factory';
+import { findRecipeQuerySchema } from '../validators/find.recipe.schema';
+import { deleteRecipeParamsSchema } from '../validators/delete.recipe.schema';
 
 const router = Router();
 
@@ -115,14 +121,65 @@ router.post(
  */
 
 const findRecipeController = makeFindRecipeController();
-
-router.get('/', (request: Request, response: Response) =>
-  findRecipeController.handle(request, response)
+router.get(
+  '/',
+  validateQuery(findRecipeQuerySchema),
+  (request: Request, response: Response) =>
+    findRecipeController.handle(request, response)
 );
 
+/**
+ * @openapi
+ * /v1/recipes/{id}:
+ *   delete:
+ *     tags:
+ *       - Recipes
+ *     summary: Deleta uma receita
+ *     description: Remove uma receita pelo ID, validando se ela pertence ao usuário autenticado. Requer token JWT.
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: number
+ *         description: ID da receita a ser removida
+ *         example: 1
+ *     responses:
+ *       200:
+ *         description: Receita deletada com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/DeleteRecipeSuccess'
+ *       401:
+ *         description: Token JWT não fornecido ou inválido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       404:
+ *         description: Receita não encontrada
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       500:
+ *         description: Erro interno do servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */
 const deleteRecipeController = makeDeleteRecipeController();
-router.delete('/:id', authMiddleware, (request: Request, response: Response) =>
-  deleteRecipeController.handle(request, response)
+
+router.delete(
+  '/:id',
+  authMiddleware,
+  validateParams(deleteRecipeParamsSchema),
+  (request: Request, response: Response) =>
+    deleteRecipeController.handle(request, response)
 );
 
 export default router;
