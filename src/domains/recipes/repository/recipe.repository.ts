@@ -31,6 +31,19 @@ export class RecipeRepository implements IRecipeRepository {
     return conditions;
   }
 
+  async find(params: FindRecipeCriteria): Promise<RecipeEntity | undefined> {
+    this.logging.info('Buscando receita');
+    const recipe = await this.model.findOne({
+      where: this.getConditions(params)
+    });
+    if (!recipe) {
+      this.logging.info('Receita não encontrada');
+      return undefined;
+    }
+    this.logging.info('Receita encontrada');
+    return new RecipeEntity(recipe);
+  }
+
   async findAll(params: FindRecipeCriteria): Promise<RecipeEntity[]> {
     this.logging.info('Buscando receitas');
     const recipes = await this.model.findAll({
@@ -43,7 +56,6 @@ export class RecipeRepository implements IRecipeRepository {
     }
 
     this.logging.info('Receitas encontradas', {
-      params,
       count: recipes.length
     });
     return recipes.map((recipe) => new RecipeEntity(recipe));
@@ -57,10 +69,13 @@ export class RecipeRepository implements IRecipeRepository {
 
   async delete(params: DeleteRecipeCriteria): Promise<boolean> {
     this.logging.info('Deletando receita');
-    const affectedRows = await this.model.destroy({ where: { id: params.id } });
+    const affectedRows = await this.model.destroy({
+      where: this.getConditions(params)
+    });
     if (affectedRows === 0) {
       this.logging.info('Receita não encontrada para deleção', {
-        id: params.id
+        id: params.id,
+        id_user: params.id_user
       });
       return false;
     }

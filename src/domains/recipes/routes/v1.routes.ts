@@ -4,6 +4,7 @@ import { validateBody } from '../../../configs/validate.schema.moddleware';
 import { createRecipeBodySchema } from '../validators/create.recipe.schema';
 import { makeFindRecipeController } from '../factory/find.recipe.factory';
 import { authMiddleware } from '../../../middlewares/auth.jwt.middleware';
+import { makeDeleteRecipeController } from '../factory/delete.recipe.factory';
 
 const router = Router();
 
@@ -117,6 +118,11 @@ const findRecipeController = makeFindRecipeController();
 
 router.get('/', (request: Request, response: Response) =>
   findRecipeController.handle(request, response)
+);
+
+const deleteRecipeController = makeDeleteRecipeController();
+router.delete('/:id', authMiddleware, (request: Request, response: Response) =>
+  deleteRecipeController.handle(request, response)
 );
 
 export default router;
