@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import jwt, { Secret, SignOptions } from 'jsonwebtoken';
 import { IUserRepository } from '../../users/interfaces/user.interaces';
 import {
   SignInServiceDependencies,
@@ -64,8 +64,9 @@ export class SignInService {
     login: string;
     name: string;
   }) {
-    const secretKey = process.env.JWT_SECRET || 'default_secret';
-    const expiresIn = process.env.JWT_EXPIRES_IN || '24h';
+    const secretKey: Secret = process.env.JWT_SECRET || 'default_secret';
+    const expiresIn: SignOptions['expiresIn'] =
+      (process.env.JWT_EXPIRES_IN as SignOptions['expiresIn']) || '24h';
     const { userId, login, name } = user;
     const token = jwt.sign({ userId, login, name }, secretKey, { expiresIn });
     this.logging.info('Token gerado com sucesso');

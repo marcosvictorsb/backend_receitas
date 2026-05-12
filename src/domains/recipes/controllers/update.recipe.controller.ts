@@ -23,16 +23,20 @@ export class UpdateRecipeController {
     } = request.body;
     const id_user = request.user?.id;
 
-    const { status, body } = await this.service.execute({
-      id: Number(id),
-      id_category,
-      name,
-      preparation_time_minutes,
-      servings,
-      preparation_method,
-      ingredients,
-      id_user: Number(id_user)
-    });
+    const { status, body } = await this.service.execute(
+      {
+        id_category,
+        name,
+        preparation_time_minutes,
+        servings,
+        preparation_method,
+        ingredients
+      },
+      {
+        id: Number(id),
+        id_user: Number(id_user)
+      }
+    );
 
     return response.status(status).json(body);
   }

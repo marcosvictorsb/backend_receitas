@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import { NextFunction, Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { logging } from '../configs/logger';
 
 dotenv.config();
@@ -9,11 +9,11 @@ export const authMiddleware = (
   request: Request,
   response: Response,
   next: NextFunction
-) => {
+): Response | void => {
   try {
     const authHeader =
-      request.headers['authorization'] || request.headers['Authorization'];
-    if (!authHeader) {
+      request.headers.authorization || request.headers.Authorization || '';
+    if (!authHeader || Array.isArray(authHeader)) {
       logging.info('Token não fornecido no cabeçalho de autorização');
       return response.status(401).json({ error: 'No token provided' });
     }
@@ -34,7 +34,7 @@ export const authMiddleware = (
         return response.status(401).json({ error: 'Invalid token' });
       }
 
-      const payload = decoded as {
+      const payload = decoded as JwtPayload & {
         userId: number;
       };
 
