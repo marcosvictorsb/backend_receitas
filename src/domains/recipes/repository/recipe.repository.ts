@@ -94,7 +94,7 @@ export class RecipeRepository implements IRecipeRepository {
   }
 
   async update(
-    data: UpdateRecipeCriteria,
+    data: Omit<UpdateRecipeCriteria, 'id' | 'id_user'>,
     params: { id: number; id_user: number }
   ): Promise<RecipeEntity> {
     this.logging.info('Atualizando receita');
@@ -111,7 +111,7 @@ export class RecipeRepository implements IRecipeRepository {
           : undefined
     };
 
-    const [affectedRows, [updatedRecipe]] = await this.model.update(payload, {
+    const [affectedRows] = await this.model.update(payload, {
       where: { id: params.id, id_user: params.id_user },
       returning: true
     });
@@ -121,7 +121,16 @@ export class RecipeRepository implements IRecipeRepository {
         id: params.id,
         id_user: params.id_user
       });
-      throw new Error('Recipe not found');
+      throw new Error('Receita não encontrada');
+    }
+
+    const updatedRecipe = await this.model.findOne({
+      where: { id: params.id, id_user: params.id_user },
+      include: [{ association: 'categorias', attributes: ['id', 'name'] }]
+    });
+
+    if (!updatedRecipe) {
+      throw new Error('Receita não encontrada');
     }
 
     return new RecipeEntity(updatedRecipe);

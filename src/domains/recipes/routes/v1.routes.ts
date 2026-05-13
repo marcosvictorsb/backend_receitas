@@ -2,16 +2,18 @@ import { Router, Request, Response } from 'express';
 import { makeCreateRecipeController } from '../factory/create.recipe.factory';
 import {
   validateBody,
-  validateParams,
-  validateQuery
+  validateParams
 } from '../../../configs/validate.schema.moddleware';
 import { createRecipeBodySchema } from '../validators/create.recipe.schema';
 import { makeFindRecipeController } from '../factory/find.recipe.factory';
 import { authMiddleware } from '../../../middlewares/auth.jwt.middleware';
 import { makeDeleteRecipeController } from '../factory/delete.recipe.factory';
-import { findRecipeQuerySchema } from '../validators/find.recipe.schema';
 import { deleteRecipeParamsSchema } from '../validators/delete.recipe.schema';
 import { makeUpdateRecipeController } from '../factory/update.recipe.factory';
+import {
+  updateRecipeBodySchema,
+  updateRecipeParamsSchema
+} from '../validators/update.recipe.schema';
 
 const router = Router();
 
@@ -246,7 +248,8 @@ const updateRecipeController = makeUpdateRecipeController();
 router.put(
   '/:id',
   authMiddleware,
-  validateBody(createRecipeBodySchema),
+  validateParams(updateRecipeParamsSchema),
+  validateBody(updateRecipeBodySchema),
   (request: Request, response: Response) =>
     updateRecipeController.handle(request, response)
 );

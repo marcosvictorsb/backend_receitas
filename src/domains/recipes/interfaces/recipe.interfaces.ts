@@ -23,6 +23,8 @@ export type DeleteRecipeCriteria = {
 };
 
 export type UpdateRecipeCriteria = {
+  id: number;
+  id_user: number;
   id_category?: number;
   name?: string;
   preparation_time_minutes?: number;
@@ -37,7 +39,7 @@ export interface IRecipeRepository {
   create(params: CreateRecipeCriteria): Promise<RecipeEntity>;
   delete(params: DeleteRecipeCriteria): Promise<boolean>;
   update(
-    data: UpdateRecipeCriteria,
+    data: Omit<UpdateRecipeCriteria, 'id' | 'id_user'>,
     criteria: { id: number; id_user: number }
   ): Promise<RecipeEntity>;
 }
