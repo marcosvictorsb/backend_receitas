@@ -53,7 +53,7 @@ describe('FindRecipeService', () => {
     const { status, body } = await findRecipeServiceMock.execute(params);
 
     expect(status).toBe(500);
-    expect(body.message).toBe(errorMessage);
+    expect(body.message).toBe('Erro ao buscar receitas');
     expect(loggingMock.info).toHaveBeenCalledWith(
       'Iniciando processo de busca de receitas',
       {

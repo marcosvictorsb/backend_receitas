@@ -31,7 +31,12 @@ describe('RecipeRepository', () => {
           id: 'recipe_id',
           id_user: 'user_id',
           id_category: 'category_id',
-          name: params.name
+          name: params.name,
+          preparation_method: '["Passo 1", "Passo 2"]',
+          ingredients: '["Ingrediente 1", "Ingrediente 2"]',
+          categorias: {
+            name: 'any_category'
+          }
         }
       ];
       modelMock.findAll.mockResolvedValue(recipeData);
@@ -43,12 +48,20 @@ describe('RecipeRepository', () => {
           id: 'recipe_id',
           id_user: 'user_id',
           id_category: 'category_id',
-          name: params.name
+          name: params.name,
+          name_category: 'any_category',
+          ingredients: ['Ingrediente 1', 'Ingrediente 2'],
+          preparation_method: ['Passo 1', 'Passo 2'],
+          created_at: undefined,
+          updated_at: undefined,
+          servings: undefined,
+          preparation_time_minutes: undefined
         }
       ]);
       expect(logging.info).toHaveBeenCalledWith('Buscando receitas');
       expect(modelMock.findAll).toHaveBeenCalledWith({
-        where: params
+        where: params,
+        include: [{ association: 'categorias', attributes: ['id', 'name'] }]
       });
       expect(modelMock.findAll).toHaveBeenCalledTimes(1);
     });
@@ -63,7 +76,8 @@ describe('RecipeRepository', () => {
       expect(logging.info).toHaveBeenCalledWith('Buscando receitas');
       expect(logging.info).toHaveBeenCalledWith('Nenhuma receita encontrada');
       expect(modelMock.findAll).toHaveBeenCalledWith({
-        where: params
+        where: params,
+        include: [{ association: 'categorias', attributes: ['id', 'name'] }]
       });
       expect(modelMock.findAll).toHaveBeenCalledTimes(1);
     });
@@ -77,19 +91,41 @@ describe('RecipeRepository', () => {
         name: 'any_name',
         preparation_time_minutes: 30,
         servings: 4,
-        preparation_method: 'any_method',
-        ingredients: 'any_ingredients'
+        preparation_method: ['any_method'],
+        ingredients: ['any_ingredients']
       };
       const recipeData = {
-        ...params
+        ...params,
+        preparation_method: '["any_method"]',
+        ingredients: '["any_ingredients"]'
       };
       modelMock.create.mockResolvedValue(recipeData);
 
       const recipe = await recipeRepositoryMock.create(params);
 
-      expect(recipe).toEqual(recipeData);
+      expect(recipe).toEqual({
+        id: undefined,
+        id_user: 1,
+        id_category: 5,
+        name: 'any_name',
+        preparation_time_minutes: 30,
+        servings: 4,
+        preparation_method: ['any_method'],
+        ingredients: ['any_ingredients'],
+        created_at: undefined,
+        updated_at: undefined,
+        name_category: undefined
+      });
       expect(logging.info).toHaveBeenCalledWith('Criando receita');
-      expect(modelMock.create).toHaveBeenCalledWith(params);
+      expect(modelMock.create).toHaveBeenCalledWith({
+        id_user: 1,
+        id_category: 5,
+        name: 'any_name',
+        preparation_time_minutes: 30,
+        servings: 4,
+        preparation_method: '["any_method"]',
+        ingredients: '["any_ingredients"]'
+      });
       expect(modelMock.create).toHaveBeenCalledTimes(1);
     });
   });
@@ -140,11 +176,18 @@ describe('RecipeRepository', () => {
         name: 'updated_name',
         preparation_time_minutes: 45,
         servings: 6,
-        preparation_method: 'updated_method',
-        ingredients: 'updated_ingredients'
+        preparation_method: ['updated_method'],
+        ingredients: ['updated_ingredients']
       };
       const updatedRecipeData = {
-        ...params
+        id: 1,
+        id_user: 1,
+        id_category: 5,
+        name: 'updated_name',
+        preparation_time_minutes: 45,
+        servings: 6,
+        preparation_method: '["updated_method"]',
+        ingredients: '["updated_ingredients"]'
       };
       modelMock.update.mockResolvedValue([1, [updatedRecipeData]]);
 
@@ -160,7 +203,19 @@ describe('RecipeRepository', () => {
         { id: params.id, id_user: params.id_user }
       );
 
-      expect(recipe).toEqual(updatedRecipeData);
+      expect(recipe).toEqual({
+        id: 1,
+        id_user: 1,
+        id_category: 5,
+        name: 'updated_name',
+        preparation_time_minutes: 45,
+        servings: 6,
+        preparation_method: ['updated_method'],
+        ingredients: ['updated_ingredients'],
+        created_at: undefined,
+        updated_at: undefined,
+        name_category: undefined
+      });
       expect(logging.info).toHaveBeenCalledWith('Atualizando receita');
       expect(modelMock.update).toHaveBeenCalledWith(
         {
@@ -168,8 +223,8 @@ describe('RecipeRepository', () => {
           name: params.name,
           preparation_time_minutes: params.preparation_time_minutes,
           servings: params.servings,
-          preparation_method: params.preparation_method,
-          ingredients: params.ingredients
+          preparation_method: '["updated_method"]',
+          ingredients: '["updated_ingredients"]'
         },
         { where: { id: params.id, id_user: params.id_user }, returning: true }
       );
@@ -184,8 +239,8 @@ describe('RecipeRepository', () => {
         name: 'updated_name',
         preparation_time_minutes: 45,
         servings: 6,
-        preparation_method: 'updated_method',
-        ingredients: 'updated_ingredients'
+        preparation_method: ['updated_method'],
+        ingredients: ['updated_ingredients']
       };
       modelMock.update.mockResolvedValue([0, []]);
 
@@ -217,8 +272,8 @@ describe('RecipeRepository', () => {
           name: params.name,
           preparation_time_minutes: params.preparation_time_minutes,
           servings: params.servings,
-          preparation_method: params.preparation_method,
-          ingredients: params.ingredients
+          preparation_method: '["updated_method"]',
+          ingredients: '["updated_ingredients"]'
         },
         { where: { id: params.id, id_user: params.id_user }, returning: true }
       );

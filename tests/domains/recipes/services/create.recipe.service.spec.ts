@@ -17,8 +17,8 @@ describe('CreateRecipeService', () => {
       name: 'Test Recipe',
       preparation_time_minutes: 30,
       servings: 4,
-      preparation_method: 'Test method',
-      ingredients: 'Test ingredients'
+      preparation_method: ['Test method'],
+      ingredients: ['Test ingredients']
     };
     const createdRecipe = { id: 1, ...params };
     recipeRepositoryMock.create.mockResolvedValue(createdRecipe);
@@ -42,8 +42,8 @@ describe('CreateRecipeService', () => {
       name: 'Test Recipe',
       preparation_time_minutes: 30,
       servings: 4,
-      preparation_method: 'Test method',
-      ingredients: 'Test ingredients'
+      preparation_method: ['Test method'],
+      ingredients: ['Test ingredients']
     };
     const errorMessage = 'Database error';
     recipeRepositoryMock.create.mockRejectedValue(new Error(errorMessage));

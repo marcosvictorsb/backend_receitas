@@ -18,14 +18,27 @@ describe('UpdateRecipeService', () => {
       name: 'Updated Recipe Name',
       preparation_time_minutes: 45,
       servings: 4,
-      preparation_method: 'Updated preparation method',
-      ingredients: 'Updated ingredients'
+      preparation_method: ['Updated preparation method'],
+      ingredients: ['Updated ingredients']
+    };
+    const updatedRecipe = {
+      id: 1,
+      id_user: 2,
+      id_category: 3,
+      name: 'Updated Recipe Name',
+      preparation_time_minutes: 45,
+      servings: 4,
+      preparation_method: ['Updated preparation method'],
+      ingredients: ['Updated ingredients'],
+      created_at: new Date(),
+      updated_at: new Date(),
+      name_category: undefined
     };
     recipeRepositoryMock.find.mockResolvedValue({
       id: params.id,
       id_user: params.id_user
     });
-    recipeRepositoryMock.update.mockResolvedValue(1);
+    recipeRepositoryMock.update.mockResolvedValue(updatedRecipe);
 
     const { status, body } = await updateRecipeServiceMock.execute(params);
 
@@ -49,7 +62,7 @@ describe('UpdateRecipeService', () => {
     );
     expect(loggingMock.error).not.toHaveBeenCalled();
     expect(status).toBe(200);
-    expect(body).toEqual({ recipe: 1 });
+    expect(body).toEqual({ recipe: updatedRecipe });
   });
 
   it('should return 404 if recipe not found', async () => {
@@ -80,7 +93,9 @@ describe('UpdateRecipeService', () => {
     const params = {
       id: 1,
       id_user: 2,
-      name: 'Updated Recipe Name'
+      name: 'Updated Recipe Name',
+      preparation_method: ['Updated method'],
+      ingredients: ['Updated ingredients']
     };
     const error = new Error('Database error');
     recipeRepositoryMock.find.mockResolvedValue({
@@ -104,8 +119,8 @@ describe('UpdateRecipeService', () => {
         name: params.name,
         preparation_time_minutes: undefined,
         servings: undefined,
-        preparation_method: undefined,
-        ingredients: undefined
+        preparation_method: params.preparation_method,
+        ingredients: params.ingredients
       },
       { id: params.id, id_user: params.id_user }
     );
