@@ -77,12 +77,17 @@ export const swaggerSpec = swaggerJSDoc({
             preparation_time_minutes: { type: 'number', example: 30 },
             servings: { type: 'number', example: 8 },
             preparation_method: {
-              type: 'string',
-              example: 'Misture os ingredientes e asse a 180°C'
+              type: 'array',
+              items: { type: 'string' },
+              example: [
+                'Misture os ingredientes',
+                'Asse a 180°C por 40 minutos'
+              ]
             },
             ingredients: {
-              type: 'string',
-              example: 'Chocolate, ovos, açúcar, farinha'
+              type: 'array',
+              items: { type: 'string' },
+              example: ['Chocolate', 'Ovos', 'Açúcar', 'Farinha']
             },
             id_category: { type: 'number', example: 1 },
             categoria: {
@@ -113,12 +118,17 @@ export const swaggerSpec = swaggerJSDoc({
             preparation_time_minutes: { type: 'number', example: 30 },
             servings: { type: 'number', example: 8 },
             preparation_method: {
-              type: 'string',
-              example: 'Misture os ingredientes e asse a 180°C'
+              type: 'array',
+              items: { type: 'string' },
+              example: [
+                'Misture os ingredientes',
+                'Asse a 180°C por 40 minutos'
+              ]
             },
             ingredients: {
-              type: 'string',
-              example: 'Chocolate, ovos, açúcar, farinha'
+              type: 'array',
+              items: { type: 'string' },
+              example: ['3 ovos', '2 xícaras de açúcar', '2 xícaras de farinha']
             },
             id_category: { type: 'number', example: 1 },
             id_user: { type: 'number', example: 1 }

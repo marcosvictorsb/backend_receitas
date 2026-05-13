@@ -17,8 +17,8 @@ export class CreateRecipeService {
     name?: string;
     preparation_time_minutes: number;
     servings: number;
-    preparation_method?: string;
-    ingredients: string;
+    preparation_method?: string[];
+    ingredients: string[];
   }): Promise<{ status: number; body: any }> {
     try {
       const {

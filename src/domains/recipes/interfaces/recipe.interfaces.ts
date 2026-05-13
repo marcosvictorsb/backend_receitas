@@ -13,8 +13,8 @@ export type CreateRecipeCriteria = {
   name?: string;
   preparation_time_minutes: number;
   servings: number;
-  preparation_method?: string;
-  ingredients: string;
+  preparation_method?: string[];
+  ingredients: string[];
 };
 
 export type DeleteRecipeCriteria = {
@@ -27,8 +27,8 @@ export type UpdateRecipeCriteria = {
   name?: string;
   preparation_time_minutes?: number;
   servings?: number;
-  preparation_method?: string;
-  ingredients?: string;
+  preparation_method?: string[];
+  ingredients?: string[];
 };
 
 export interface IRecipeRepository {

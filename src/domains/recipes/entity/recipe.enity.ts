@@ -6,8 +6,8 @@ export class RecipeEntity {
   public readonly name?: string;
   public readonly preparation_time_minutes?: number;
   public readonly servings?: number;
-  public readonly preparation_method: string;
-  public readonly ingredients?: string;
+  public readonly preparation_method: string[];
+  public readonly ingredients?: string[];
   public readonly created_at?: Date;
   public readonly updated_at?: Date;
 
@@ -19,8 +19,8 @@ export class RecipeEntity {
     name?: string;
     preparation_time_minutes?: number;
     servings?: number;
-    preparation_method: string;
-    ingredients?: string;
+    preparation_method: string | string[];
+    ingredients?: string | string[];
     created_at?: Date;
     updated_at?: Date;
   }) {
@@ -31,9 +31,30 @@ export class RecipeEntity {
     this.name = params?.name;
     this.preparation_time_minutes = params?.preparation_time_minutes;
     this.servings = params?.servings;
-    this.preparation_method = params.preparation_method;
-    this.ingredients = params?.ingredients;
+    this.preparation_method = this.toArray(params.preparation_method);
+    this.ingredients = this.toArray(params?.ingredients);
     this.created_at = params?.created_at;
     this.updated_at = params?.updated_at;
+  }
+
+  private toArray(value?: string | string[]): string[] {
+    if (!value) return [];
+    if (Array.isArray(value))
+      return value.map((item) => item.trim()).filter(Boolean);
+
+    const parsed = JSON.parse(value);
+    if (Array.isArray(parsed)) {
+      return parsed.map((item) => String(item).trim()).filter(Boolean);
+    }
+
+    if (value.includes(';')) {
+      return value
+        .split(';')
+        .map((item) => item.trim())
+        .filter(Boolean);
+    }
+
+    const single = value.trim();
+    return single ? [single] : [];
   }
 }

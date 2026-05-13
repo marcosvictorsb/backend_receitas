@@ -31,6 +31,11 @@ export class RecipeRepository implements IRecipeRepository {
     return conditions;
   }
 
+  private serializeArray(value?: string[]): string | undefined {
+    if (!value) return undefined;
+    return JSON.stringify(value);
+  }
+
   async find(params: FindRecipeCriteria): Promise<RecipeEntity | undefined> {
     this.logging.info('Buscando receita');
     const recipe = await this.model.findOne({
@@ -64,7 +69,11 @@ export class RecipeRepository implements IRecipeRepository {
 
   async create(params: CreateRecipeCriteria): Promise<RecipeEntity> {
     this.logging.info('Criando receita');
-    const recipe = await this.model.create(params);
+    const recipe = await this.model.create({
+      ...params,
+      preparation_method: this.serializeArray(params.preparation_method),
+      ingredients: this.serializeArray(params.ingredients)
+    });
     return new RecipeEntity(recipe);
   }
 
@@ -89,7 +98,20 @@ export class RecipeRepository implements IRecipeRepository {
     params: { id: number; id_user: number }
   ): Promise<RecipeEntity> {
     this.logging.info('Atualizando receita');
-    const [affectedRows, [updatedRecipe]] = await this.model.update(data, {
+
+    const payload = {
+      ...data,
+      preparation_method:
+        data.preparation_method !== undefined
+          ? this.serializeArray(data.preparation_method)
+          : undefined,
+      ingredients:
+        data.ingredients !== undefined
+          ? this.serializeArray(data.ingredients)
+          : undefined
+    };
+
+    const [affectedRows, [updatedRecipe]] = await this.model.update(payload, {
       where: { id: params.id, id_user: params.id_user },
       returning: true
     });
