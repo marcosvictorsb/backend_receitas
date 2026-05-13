@@ -61,7 +61,7 @@ export class RecipeRepository implements IRecipeRepository {
         ...(params.search
           ? {
               name: {
-                [Op.iLike]: `%${params.search}%`
+                [Op.like]: `%${params.search}%`
               }
             }
           : {})
