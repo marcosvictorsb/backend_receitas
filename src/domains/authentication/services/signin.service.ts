@@ -62,7 +62,7 @@ export class SignInService {
       };
     } catch (error: any) {
       this.logging.error('Erro ao realizar login', {
-        error: JSON.stringify(error)
+        error
       });
       return { status: 500, body: { message: error.message } };
     }

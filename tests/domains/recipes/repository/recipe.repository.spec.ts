@@ -4,7 +4,8 @@ import { LoggerMock } from '../../../mocks/logger.mock';
 import { RecipeRepository } from '../../../../src/domains/recipes/repository/recipe.repository';
 
 const modelMock = {
-  findAll: vi.fn(),
+  findAndCountAll: vi.fn(),
+  findOne: vi.fn(),
   create: vi.fn(),
   destroy: vi.fn(),
   update: vi.fn()
@@ -23,7 +24,7 @@ describe('RecipeRepository', () => {
     vi.clearAllMocks();
   });
 
-  describe('findAll', () => {
+  describe('findAndCountAll', () => {
     it('should find recipes by criteria', async () => {
       const params = { name: 'any_name' };
       const recipeData = [
@@ -39,12 +40,15 @@ describe('RecipeRepository', () => {
           }
         }
       ];
-      modelMock.findAll.mockResolvedValue(recipeData);
+      modelMock.findAndCountAll.mockResolvedValue({
+        rows: recipeData,
+        count: recipeData.length
+      });
 
-      const recipes = await recipeRepositoryMock.findAll(params);
+      const { recipes } = await recipeRepositoryMock.findAll(params);
 
       expect(recipes).toEqual([
-        {
+        expect.objectContaining({
           id: 'recipe_id',
           id_user: 'user_id',
           id_category: 'category_id',
@@ -56,30 +60,29 @@ describe('RecipeRepository', () => {
           updated_at: undefined,
           servings: undefined,
           preparation_time_minutes: undefined
-        }
+        })
       ]);
       expect(logging.info).toHaveBeenCalledWith('Buscando receitas');
-      expect(modelMock.findAll).toHaveBeenCalledWith({
-        where: params,
-        include: [{ association: 'categorias', attributes: ['id', 'name'] }]
+      expect(modelMock.findAndCountAll).toHaveBeenCalledWith({
+        where: { name: params.name },
+        order: [['created_at', 'DESC']],
+        include: [{ association: 'categorias', attributes: ['id', 'name'] }],
+        limit: 10,
+        offset: 0
       });
-      expect(modelMock.findAll).toHaveBeenCalledTimes(1);
+      expect(modelMock.findAndCountAll).toHaveBeenCalledTimes(1);
     });
 
     it('should return empty array if no recipes found', async () => {
       const params = { name: 'nonexistent_name' };
-      modelMock.findAll.mockResolvedValue([]);
+      modelMock.findAndCountAll.mockResolvedValue({ rows: [], count: 0 });
 
       const recipes = await recipeRepositoryMock.findAll(params);
 
-      expect(recipes).toEqual([]);
+      expect(recipes).toEqual({ recipes: [], total: 0 });
       expect(logging.info).toHaveBeenCalledWith('Buscando receitas');
       expect(logging.info).toHaveBeenCalledWith('Nenhuma receita encontrada');
-      expect(modelMock.findAll).toHaveBeenCalledWith({
-        where: params,
-        include: [{ association: 'categorias', attributes: ['id', 'name'] }]
-      });
-      expect(modelMock.findAll).toHaveBeenCalledTimes(1);
+      expect(modelMock.findAndCountAll).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -190,6 +193,7 @@ describe('RecipeRepository', () => {
         ingredients: '["updated_ingredients"]'
       };
       modelMock.update.mockResolvedValue([1, [updatedRecipeData]]);
+      modelMock.findOne.mockResolvedValue(updatedRecipeData);
 
       const recipe = await recipeRepositoryMock.update(
         {
@@ -256,7 +260,7 @@ describe('RecipeRepository', () => {
           },
           { id: params.id, id_user: params.id_user }
         )
-      ).rejects.toThrow('Recipe not found');
+      ).rejects.toThrow('Receita não encontrada');
 
       expect(logging.info).toHaveBeenCalledWith('Atualizando receita');
       expect(logging.info).toHaveBeenCalledWith(

@@ -66,7 +66,7 @@ export class UpdateRecipeService {
       return { status: 200, body: { recipe: updatedRecipe } };
     } catch (error: any) {
       this.logging.error(`Erro ao atualizar receita com id ${params.id}`, {
-        error: JSON.stringify(error)
+        error
       });
       return { status: 500, body: { message: 'Erro ao atualizar receita' } };
     }

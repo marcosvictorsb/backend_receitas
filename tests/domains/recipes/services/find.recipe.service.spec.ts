@@ -20,7 +20,10 @@ describe('FindRecipeService', () => {
         name: params.name
       }
     ];
-    recipeRepositoryMock.findAll.mockResolvedValue(recipeData);
+    recipeRepositoryMock.findAll.mockResolvedValue({
+      recipes: recipeData,
+      total: recipeData.length
+    });
 
     const { status, body } = await findRecipeServiceMock.execute(params);
 
@@ -39,10 +42,21 @@ describe('FindRecipeService', () => {
         id: undefined,
         id_user: undefined,
         id_category: undefined,
-        name: params.name
+        name: params.name,
+        page: undefined,
+        limit: undefined,
+        search: undefined
       }
     );
-    expect(recipeRepositoryMock.findAll).toHaveBeenCalledWith(params);
+    expect(recipeRepositoryMock.findAll).toHaveBeenCalledWith({
+      id: undefined,
+      id_user: undefined,
+      id_category: undefined,
+      name: params.name,
+      page: undefined,
+      limit: undefined,
+      search: undefined
+    });
   });
 
   it('should handle errors during recipe search', async () => {

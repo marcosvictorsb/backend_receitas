@@ -80,6 +80,7 @@ export class RecipeRepository implements IRecipeRepository {
     this.logging.info('Receitas encontradas', {
       count: recipes.count
     });
+
     return {
       recipes: recipes.rows.map((recipe) => new RecipeEntity(recipe)),
       total: recipes.count

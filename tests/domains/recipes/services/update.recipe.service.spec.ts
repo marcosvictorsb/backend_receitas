@@ -129,6 +129,6 @@ describe('UpdateRecipeService', () => {
       { error }
     );
     expect(status).toBe(500);
-    expect(body).toEqual({ message: error.message });
+    expect(body).toEqual({ message: 'Erro ao atualizar receita' });
   });
 });

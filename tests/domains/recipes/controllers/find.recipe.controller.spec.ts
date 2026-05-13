@@ -54,7 +54,10 @@ describe('FindRecipeController', () => {
       id: request.query.id,
       id_user: request.user.id,
       id_category: request.query.id_category,
-      name: request.query.name
+      name: request.query.name,
+      page: 1,
+      limit: 10,
+      search: undefined
     });
     expect(serviceMock.execute).toHaveBeenCalledTimes(1);
   });
@@ -86,10 +89,13 @@ describe('FindRecipeController', () => {
       message: 'Recipe not found'
     });
     expect(serviceMock.execute).toHaveBeenCalledWith({
-      id: request.query.id,
+      id: undefined,
       id_user: request.user.id,
-      id_category: request.query.id_category,
-      name: request.query.name
+      id_category: undefined,
+      name: undefined,
+      page: 1,
+      limit: 10,
+      search: undefined
     });
     expect(serviceMock.execute).toHaveBeenCalledTimes(1);
   });
