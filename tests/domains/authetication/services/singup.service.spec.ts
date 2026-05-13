@@ -21,7 +21,9 @@ describe('SignUpService', () => {
     const { status, body } = await signUpServiceMock.execute(params);
 
     expect(status).toBe(400);
-    expect(body.message).toBe('Login já existe');
+    expect(body.message).toBe(
+      'Já existe uma conta com este login. Tente outro'
+    );
     expect(loggingMock.info).toHaveBeenCalledWith(
       'Iniciando processo de cadastro',
       { name: params.name, login: params.login }
@@ -30,9 +32,12 @@ describe('SignUpService', () => {
       login: params.login
     });
     expect(userRepositoryMock.find).toHaveBeenCalledTimes(1);
-    expect(loggingMock.info).toHaveBeenCalledWith('Login já existe', {
-      login: params.login
-    });
+    expect(loggingMock.info).toHaveBeenCalledWith(
+      'Já existe uma conta com este login. Tente outro',
+      {
+        login: params.login
+      }
+    );
     expect(userRepositoryMock.create).not.toHaveBeenCalled();
     expect(loggingMock.error).not.toHaveBeenCalled();
   });
@@ -67,9 +72,12 @@ describe('SignUpService', () => {
       login: params.login
     });
     expect(userRepositoryMock.find).toHaveBeenCalledTimes(1);
-    expect(loggingMock.info).not.toHaveBeenCalledWith('Login já existe', {
-      login: params.login
-    });
+    expect(loggingMock.info).not.toHaveBeenCalledWith(
+      'Já existe uma conta com este login. Tente outro',
+      {
+        login: params.login
+      }
+    );
     expect(userRepositoryMock.create).toHaveBeenCalledWith({
       name: params.name,
       login: params.login,
@@ -101,9 +109,12 @@ describe('SignUpService', () => {
       login: params.login
     });
     expect(userRepositoryMock.find).toHaveBeenCalledTimes(1);
-    expect(loggingMock.info).not.toHaveBeenCalledWith('Login já existe', {
-      login: params.login
-    });
+    expect(loggingMock.info).not.toHaveBeenCalledWith(
+      'Já existe uma conta com este login. Tente outro',
+      {
+        login: params.login
+      }
+    );
     expect(userRepositoryMock.create).toHaveBeenCalledWith({
       name: params.name,
       login: params.login,

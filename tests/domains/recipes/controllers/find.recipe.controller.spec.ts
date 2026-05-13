@@ -35,9 +35,11 @@ describe('FindRecipeController', () => {
     const request: any = {
       query: {
         id: 1,
-        id_user: 2,
         id_category: 3,
         name: 'bolo de chocolate'
+      },
+      user: {
+        id: 2
       }
     };
     const response = makeResponseMock();
@@ -50,7 +52,7 @@ describe('FindRecipeController', () => {
     });
     expect(serviceMock.execute).toHaveBeenCalledWith({
       id: request.query.id,
-      id_user: request.query.id_user,
+      id_user: request.user.id,
       id_category: request.query.id_category,
       name: request.query.name
     });
@@ -68,9 +70,11 @@ describe('FindRecipeController', () => {
     const request: any = {
       query: {
         id: undefined,
-        id_user: undefined,
         id_category: undefined,
         name: undefined
+      },
+      user: {
+        id: 1
       }
     };
     const response = makeResponseMock();
@@ -83,9 +87,9 @@ describe('FindRecipeController', () => {
     });
     expect(serviceMock.execute).toHaveBeenCalledWith({
       id: request.query.id,
-      id_user: undefined,
-      id_category: undefined,
-      name: undefined
+      id_user: request.user.id,
+      id_category: request.query.id_category,
+      name: request.query.name
     });
     expect(serviceMock.execute).toHaveBeenCalledTimes(1);
   });

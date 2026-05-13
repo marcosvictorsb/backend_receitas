@@ -6,8 +6,7 @@ export const createRecipeBodySchema = z.object({
   servings: z.number().int().positive().optional(),
   preparation_method: z.string().trim().min(1),
   ingredients: z.string().trim().optional(),
-  id_category: z.number().int().positive().optional(),
-  id_user: z.number().int().positive()
+  id_category: z.number().int().positive().optional()
 });
 
 export type CreateRecipeBody = z.infer<typeof createRecipeBodySchema>;

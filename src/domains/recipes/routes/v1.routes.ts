@@ -124,7 +124,8 @@ router.post(
 const findRecipeController = makeFindRecipeController();
 router.get(
   '/',
-  validateQuery(findRecipeQuerySchema),
+  //validateQuery(findRecipeQuerySchema),
+  authMiddleware,
   (request: Request, response: Response) =>
     findRecipeController.handle(request, response)
 );

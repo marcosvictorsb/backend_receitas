@@ -29,8 +29,13 @@ export class SignUpService {
 
       const user = await this.userRepository.find({ login });
       if (user) {
-        this.logging.info('Login já existe', { login });
-        return { status: 400, body: { message: 'Login já existe' } };
+        this.logging.info('Já existe uma conta com este login. Tente outro', {
+          login
+        });
+        return {
+          status: 400,
+          body: { message: 'Já existe uma conta com este login. Tente outro' }
+        };
       }
 
       const hashedPassword = await this.hashPassword(password);
