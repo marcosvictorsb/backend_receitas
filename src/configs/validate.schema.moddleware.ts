@@ -34,7 +34,6 @@ export const validateQuery = (schema: ZodTypeAny) => {
       });
     }
 
-    request.query = result.data as Request['query'];
     return next();
   };
 };

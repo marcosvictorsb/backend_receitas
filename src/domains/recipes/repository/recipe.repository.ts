@@ -1,10 +1,11 @@
-import { ModelStatic } from 'sequelize';
+import { ModelStatic, Op } from 'sequelize';
 import { RecipeEntity } from '../entity/recipe.enity';
 import RecipeModel from '../model/recipe.model';
 import { ILoggerService } from '../../../configs/logger';
 import {
   CreateRecipeCriteria,
   DeleteRecipeCriteria,
+  FindAllRecipeResult,
   FindRecipeCriteria,
   IRecipeRepository,
   UpdateRecipeCriteria
@@ -49,22 +50,39 @@ export class RecipeRepository implements IRecipeRepository {
     return new RecipeEntity(recipe);
   }
 
-  async findAll(params: FindRecipeCriteria): Promise<RecipeEntity[]> {
+  async findAll(params: FindRecipeCriteria): Promise<FindAllRecipeResult> {
     this.logging.info('Buscando receitas');
-    const recipes = await this.model.findAll({
-      where: this.getConditions(params),
-      include: [{ association: 'categorias', attributes: ['id', 'name'] }]
+    const offset = ((params.page || 1) - 1) * (params.limit || 10);
+    const limit = params.limit || 10;
+
+    const recipes = await this.model.findAndCountAll({
+      where: {
+        ...this.getConditions(params),
+        ...(params.search
+          ? {
+              name: {
+                [Op.iLike]: `%${params.search}%`
+              }
+            }
+          : {})
+      },
+      include: [{ association: 'categorias', attributes: ['id', 'name'] }],
+      limit,
+      offset
     });
 
-    if (!recipes.length) {
+    if (recipes.count === 0) {
       this.logging.info('Nenhuma receita encontrada');
-      return [];
+      return { recipes: [], total: 0 };
     }
 
     this.logging.info('Receitas encontradas', {
-      count: recipes.length
+      count: recipes.count
     });
-    return recipes.map((recipe) => new RecipeEntity(recipe));
+    return {
+      recipes: recipes.rows.map((recipe) => new RecipeEntity(recipe)),
+      total: recipes.count
+    };
   }
 
   async create(params: CreateRecipeCriteria): Promise<RecipeEntity> {

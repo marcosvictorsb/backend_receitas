@@ -5,6 +5,9 @@ export type FindRecipeCriteria = {
   id_user?: number;
   id_category?: number;
   name?: string;
+  page?: number;
+  limit?: number;
+  search?: string;
 };
 
 export type CreateRecipeCriteria = {
@@ -33,9 +36,14 @@ export type UpdateRecipeCriteria = {
   ingredients?: string[];
 };
 
+export type FindAllRecipeResult = {
+  recipes: RecipeEntity[];
+  total: number;
+};
+
 export interface IRecipeRepository {
   find(params: FindRecipeCriteria): Promise<RecipeEntity | undefined>;
-  findAll(params: FindRecipeCriteria): Promise<RecipeEntity[]>;
+  findAll(params: FindRecipeCriteria): Promise<FindAllRecipeResult>;
   create(params: CreateRecipeCriteria): Promise<RecipeEntity>;
   delete(params: DeleteRecipeCriteria): Promise<boolean>;
   update(

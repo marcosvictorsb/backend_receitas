@@ -2,7 +2,8 @@ import { Router, Request, Response } from 'express';
 import { makeCreateRecipeController } from '../factory/create.recipe.factory';
 import {
   validateBody,
-  validateParams
+  validateParams,
+  validateQuery
 } from '../../../configs/validate.schema.moddleware';
 import { createRecipeBodySchema } from '../validators/create.recipe.schema';
 import { makeFindRecipeController } from '../factory/find.recipe.factory';
@@ -14,6 +15,7 @@ import {
   updateRecipeBodySchema,
   updateRecipeParamsSchema
 } from '../validators/update.recipe.schema';
+import { findRecipeQuerySchema } from '../validators/find.recipe.schema';
 
 const router = Router();
 
@@ -76,7 +78,7 @@ router.post(
  *     tags:
  *       - Recipes
  *     summary: Lista receitas com filtros opcionais
- *     description: Busca receitas na base de dados com suporte a filtros por id, id_user, id_category ou name. Todos os parâmetros são opcionais.
+ *     description: Busca receitas na base de dados com suporte a filtros por id, id_user, id_category, name, page, limit e search. Todos os parâmetros são opcionais.
  *     parameters:
  *       - in: query
  *         name: id
@@ -102,6 +104,24 @@ router.post(
  *           type: string
  *         description: Nome ou parte do nome da receita
  *         example: Bolo
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: number
+ *         description: Número da página
+ *         example: 1
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: number
+ *         description: Quantidade de itens por página
+ *         example: 10
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Texto para busca
+ *         example: ''
  *     responses:
  *       200:
  *         description: Lista de receitas retornada com sucesso
@@ -126,7 +146,7 @@ router.post(
 const findRecipeController = makeFindRecipeController();
 router.get(
   '/',
-  //validateQuery(findRecipeQuerySchema),
+  validateQuery(findRecipeQuerySchema),
   authMiddleware,
   (request: Request, response: Response) =>
     findRecipeController.handle(request, response)

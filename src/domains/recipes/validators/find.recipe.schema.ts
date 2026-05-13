@@ -1,6 +1,15 @@
 import { z } from 'zod';
 
 export const findRecipeQuerySchema = z.object({
+  page: z
+    .string()
+    .regex(/^\d+$/, 'page deve ser um numero inteiro positivo')
+    .optional(),
+  limit: z
+    .string()
+    .regex(/^\d+$/, 'limit deve ser um numero inteiro positivo')
+    .optional(),
+  search: z.string().trim().optional(),
   id: z
     .string()
     .regex(/^\d+$/, 'id deve ser um numero inteiro positivo')
