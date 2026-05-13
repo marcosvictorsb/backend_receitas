@@ -21,6 +21,11 @@ export class SignInService {
     body: {
       message?: string;
       token?: string;
+      user?: {
+        id: number;
+        login: string;
+        name: string;
+      };
     };
   }> {
     try {
@@ -48,9 +53,17 @@ export class SignInService {
         name: user.name
       });
 
-      return { status: 200, body: { token } };
+      return {
+        status: 200,
+        body: {
+          user: { id: Number(user.id), login: user.login, name: user.name },
+          token
+        }
+      };
     } catch (error: any) {
-      this.logging.error('Erro ao realizar login', { error });
+      this.logging.error('Erro ao realizar login', {
+        error: JSON.stringify(error)
+      });
       return { status: 500, body: { message: error.message } };
     }
   }
