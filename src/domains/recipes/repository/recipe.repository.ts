@@ -47,7 +47,8 @@ export class RecipeRepository implements IRecipeRepository {
   async findAll(params: FindRecipeCriteria): Promise<RecipeEntity[]> {
     this.logging.info('Buscando receitas');
     const recipes = await this.model.findAll({
-      where: this.getConditions(params)
+      where: this.getConditions(params),
+      include: [{ association: 'categorias', attributes: ['id', 'name'] }]
     });
 
     if (!recipes.length) {

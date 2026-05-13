@@ -40,7 +40,7 @@ export class FindRecipeService {
       this.logging.error('Erro ao buscar receitas', { error });
       return {
         status: 500,
-        body: { message: error.message }
+        body: { message: 'Erro ao buscar receitas' }
       };
     }
   }

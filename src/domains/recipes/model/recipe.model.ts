@@ -112,7 +112,7 @@ RecipeModel.belongsTo(UserModel, {
 });
 
 RecipeModel.belongsTo(CategoryModel, {
-  as: 'categoria',
+  as: 'categorias',
   foreignKey: 'id_category'
 });
 
