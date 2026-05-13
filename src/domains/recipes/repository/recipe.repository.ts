@@ -66,6 +66,7 @@ export class RecipeRepository implements IRecipeRepository {
             }
           : {})
       },
+      order: [['created_at', 'DESC']],
       include: [{ association: 'categorias', attributes: ['id', 'name'] }],
       limit,
       offset
