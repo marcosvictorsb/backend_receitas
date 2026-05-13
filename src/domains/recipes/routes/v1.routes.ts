@@ -184,6 +184,63 @@ router.delete(
     deleteRecipeController.handle(request, response)
 );
 
+/**
+ * @openapi
+ * /v1/recipes/{id}:
+ *   put:
+ *     tags:
+ *       - Recipes
+ *     summary: Atualiza uma receita
+ *     description: Atualiza os dados de uma receita pelo ID, validando se ela pertence ao usuário autenticado. Requer token JWT.
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: number
+ *         description: ID da receita a ser atualizada
+ *         example: 1
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CreateRecipeBody'
+ *     responses:
+ *       200:
+ *         description: Receita atualizada com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CreateRecipeSuccess'
+ *       400:
+ *         description: Dados inválidos na requisição
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       401:
+ *         description: Token JWT não fornecido ou inválido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       404:
+ *         description: Receita não encontrada
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       500:
+ *         description: Erro interno do servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */
+
 const updateRecipeController = makeUpdateRecipeController();
 
 router.put(

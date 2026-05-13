@@ -85,6 +85,13 @@ export const swaggerSpec = swaggerJSDoc({
               example: 'Chocolate, ovos, açúcar, farinha'
             },
             id_category: { type: 'number', example: 1 },
+            categoria: {
+              type: 'object',
+              properties: {
+                id: { type: 'number', example: 1 },
+                name: { type: 'string', example: 'Doces' }
+              }
+            },
             id_user: { type: 'number', example: 1 },
             created_at: {
               type: 'string',
