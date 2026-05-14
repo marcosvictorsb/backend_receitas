@@ -14,7 +14,7 @@ export class FindCategoriesService {
       return { status: 200, body: { categories } };
     } catch (error) {
       this.logging.error('Erro ao buscar categorias', error);
-      throw new Error('Erro ao buscar categorias');
+      return { status: 500, body: { message: 'Erro ao buscar categorias' } };
     }
   }
 }
