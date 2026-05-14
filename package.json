@@ -10,6 +10,7 @@
     "test:coverage": "vitest --coverage",
     "test:e2e": "DB_NAME=receitas_e2e NODE_ENV=testing vitest run --config vitest.e2e.config.ts",
     "test:e2e:watch": "DB_NAME=receitas_e2e NODE_ENV=testing vitest --config vitest.e2e.config.ts",
+    "test:e2e:coverage": "DB_NAME=receitas_e2e NODE_ENV=testing vitest run --config vitest.e2e.config.ts --coverage",
     "lint": "eslint src --ext .ts",
     "db:migrate:create": "npx sequelize-cli migration:generate --name",
     "db:migrate": "npx sequelize-cli db:migrate",
