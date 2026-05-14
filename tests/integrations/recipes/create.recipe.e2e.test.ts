@@ -1,29 +1,19 @@
 import request from 'supertest';
 import { app } from '../../../src/app';
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
+import { getToken, registerUser } from '../helpers/auth.helper';
 
-const NAME = `NAME_TESTING`;
-const LOGIN = `LOGIN_TESTING_${Date.now()}`;
-const PASSWORD = `PASSWORD_TESTING_${Date.now()}`;
-
-const registerUser = async () => {
-  await request(app).post('/v1/auth/signup').send({
-    name: NAME,
-    login: LOGIN,
-    password: PASSWORD
-  });
-};
-
-const getToken = async () => {
-  const response = await request(app).post('/v1/auth/signin').send({
-    login: LOGIN,
-    password: PASSWORD
-  });
-
-  return { token: response.body.token, user: response.body.user };
-};
+let token: string;
+let user: { id: number; name: string; login: string };
 
 describe('Create Recipe', () => {
+  beforeAll(async () => {
+    await registerUser();
+    const { token: userToken, user: userInfo } = await getToken();
+    token = userToken;
+    user = userInfo;
+  });
+
   it('should fail to create a recipe without authentication', async () => {
     const newRecipe = {
       name: 'Test Recipe',
@@ -56,9 +46,6 @@ describe('Create Recipe', () => {
   });
 
   it('should fail to create a recipe with missing fields', async () => {
-    await registerUser();
-    const { token } = await getToken();
-
     const response = await request(app)
       .post('/v1/recipes')
       .set('Authorization', `Bearer ${token}`)
@@ -81,7 +68,6 @@ describe('Create Recipe', () => {
   });
 
   it('should fail to create a recipe with empty fields', async () => {
-    await registerUser();
     const { token } = await getToken();
 
     const newRecipe = {
@@ -120,9 +106,6 @@ describe('Create Recipe', () => {
   });
 
   it('should fail to create a recipe with non-array ingredients and preparation', async () => {
-    await registerUser();
-    const { token } = await getToken();
-
     const newRecipe = {
       name: 'Test Recipe',
       ingredients: 'Not an array',
@@ -151,9 +134,6 @@ describe('Create Recipe', () => {
   });
 
   it('should fail to create a recipe with empty array for ingredients and preparation', async () => {
-    await registerUser();
-    const { token, user } = await getToken();
-
     const newRecipe = {
       name: 'Test Recipe',
       ingredients: [],
@@ -182,9 +162,6 @@ describe('Create Recipe', () => {
   });
 
   it('should create a recipe successfully', async () => {
-    await registerUser();
-    const { token, user } = await getToken();
-
     const newRecipe = {
       name: 'Test Recipe',
       ingredients: ['Ingredient 1', 'Ingredient 2'],
