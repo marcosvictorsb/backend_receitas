@@ -47,19 +47,42 @@ const router = Router();
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 'Dados de entrada inválidos'
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       path:
+ *                         type: string
+ *                         example: 'preparation_method'
+ *                       message:
+ *                         type: string
+ *                         example: 'Invalid input: expected array, received undefined'
  *       401:
  *         description: Token JWT não fornecido ou inválido
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 'No token provided'
  *       500:
  *         description: Erro interno do servidor
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 'Erro ao criar receita'
  */
 
 const createRecipeController = makeCreateRecipeController();
@@ -79,6 +102,8 @@ router.post(
  *       - Recipes
  *     summary: Lista receitas com filtros opcionais
  *     description: Busca receitas na base de dados com suporte a filtros por id, id_user, id_category, name, page, limit e search. Todos os parâmetros são opcionais.
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: query
  *         name: id
@@ -130,17 +155,35 @@ router.post(
  *             schema:
  *               $ref: '#/components/schemas/FindRecipeSuccess'
  *       400:
- *         description: Parâmetros de filtro inválidos
+ *         description: Parâmetros de query inválidos
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 'Dados de entrada inválidos'
+ *       401:
+ *         description: Token JWT não fornecido ou inválido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 'No token provided'
  *       500:
  *         description: Erro interno do servidor
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 'Erro ao buscar receitas'
  */
 
 const findRecipeController = makeFindRecipeController();
@@ -182,19 +225,31 @@ router.get(
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 'No token provided'
  *       404:
  *         description: Receita não encontrada
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 'Receita não encontrada'
  *       500:
  *         description: Erro interno do servidor
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 'Erro ao excluir receita'
  */
 const deleteRecipeController = makeDeleteRecipeController();
 
@@ -238,29 +293,52 @@ router.delete(
  *             schema:
  *               $ref: '#/components/schemas/CreateRecipeSuccess'
  *       400:
- *         description: Dados inválidos na requisição
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    example: 'Dados de entrada inválidos'
+ *                  errors:
+ *                    type: array
+ *                    items:
+ *                      type: object
+ *                      properties:
+ *                        path:
+ *                          type: string
+ *                          example: 'preparation_method'
+ *                        message:
+ *                          type: string
+ *                          example: 'Invalid input: expected array, received undefined'
  *       401:
- *         description: Token JWT não fornecido ou inválido
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: 'No token provided'
  *       404:
- *         description: Receita não encontrada
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 'Receita não encontrada'
  *       500:
- *         description: Erro interno do servidor
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 'Erro ao atualizar receita'
  */
 
 const updateRecipeController = makeUpdateRecipeController();

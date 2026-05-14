@@ -29,8 +29,8 @@ export const swaggerSpec = swaggerJSDoc({
           required: ['name', 'login', 'password'],
           properties: {
             name: { type: 'string', example: 'Marcos' },
-            login: { type: 'string', example: 'marcos123' },
-            password: { type: 'string', example: 'Senha@123' }
+            login: { type: 'string', example: 'any_email@com.br' },
+            password: { type: 'string', example: 'AnyPass0rd' }
           }
         },
         SignUpSuccess: {
@@ -41,7 +41,7 @@ export const swaggerSpec = swaggerJSDoc({
               properties: {
                 id: { type: 'number', example: 1 },
                 name: { type: 'string', example: 'Marcos' },
-                login: { type: 'string', example: 'marcos123' }
+                login: { type: 'string', example: 'any_email@com.br' }
               }
             }
           }
@@ -60,6 +60,14 @@ export const swaggerSpec = swaggerJSDoc({
             token: {
               type: 'string',
               example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.exemplo.token'
+            },
+            user: {
+              type: 'object',
+              properties: {
+                id: { type: 'number', example: 1 },
+                name: { type: 'string', example: 'Marcos' },
+                login: { type: 'string', example: 'marcos123' }
+              }
             }
           }
         },
@@ -112,7 +120,7 @@ export const swaggerSpec = swaggerJSDoc({
         },
         CreateRecipeBody: {
           type: 'object',
-          required: ['preparation_method', 'ingredients', 'id_user'],
+          required: ['preparation_method', 'ingredients'],
           properties: {
             name: { type: 'string', example: 'Bolo de Chocolate' },
             preparation_time_minutes: { type: 'number', example: 30 },
@@ -130,8 +138,7 @@ export const swaggerSpec = swaggerJSDoc({
               items: { type: 'string' },
               example: ['3 ovos', '2 xícaras de açúcar', '2 xícaras de farinha']
             },
-            id_category: { type: 'number', example: 1 },
-            id_user: { type: 'number', example: 1 }
+            id_category: { type: 'number', example: 1 }
           }
         },
         CreateRecipeSuccess: {
@@ -147,8 +154,15 @@ export const swaggerSpec = swaggerJSDoc({
           properties: {
             recipes: {
               type: 'array',
-              items: {
-                $ref: '#/components/schemas/RecipeObject'
+              items: { $ref: '#/components/schemas/RecipeObject' }
+            },
+            pagination: {
+              type: 'object',
+              properties: {
+                total: { type: 'number', example: 50 },
+                page: { type: 'number', example: 1 },
+                limit: { type: 'number', example: 10 },
+                totalPages: { type: 'number', example: 5 }
               }
             }
           }

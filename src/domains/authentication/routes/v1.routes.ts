@@ -31,13 +31,25 @@ const signUpController = makeSignUpController();
  *             schema:
  *               $ref: '#/components/schemas/SignUpSuccess'
  *       400:
- *         description: Dados invalidos ou login ja existente
+ *         description: Login já em uso
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 'Já existe uma conta com este login. Tente outro'
  *       500:
  *         description: Erro interno do servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 'Erro ao cadastrar usuário'
  */
 router.post(
   '/signup',
@@ -77,6 +89,14 @@ const signInController = makeSignInController();
  *               $ref: '#/components/schemas/ErrorResponse'
  *       500:
  *         description: Erro interno do servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 'Erro ao realizar login'
  */
 router.post(
   '/signin',
