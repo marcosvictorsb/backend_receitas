@@ -43,7 +43,7 @@ export class DeleteRecipeService {
       this.logging.error('Erro ao excluir receita', { error });
       return {
         status: 500,
-        body: { message: error.message }
+        body: { message: 'Erro ao excluir receita' }
       };
     }
   }

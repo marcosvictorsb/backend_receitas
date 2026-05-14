@@ -64,7 +64,7 @@ export class SignInService {
       this.logging.error('Erro ao realizar login', {
         error
       });
-      return { status: 500, body: { message: error.message } };
+      return { status: 500, body: { message: 'Erro ao realizar login' } };
     }
   }
 

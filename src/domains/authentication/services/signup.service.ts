@@ -54,7 +54,7 @@ export class SignUpService {
       };
     } catch (error: any) {
       this.logging.error('Erro ao cadastrar usuário', { error });
-      return { status: 500, body: { message: error.message } };
+      return { status: 500, body: { message: 'Erro ao cadastrar usuário' } };
     }
   }
 

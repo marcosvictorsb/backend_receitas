@@ -45,7 +45,7 @@ export class CreateRecipeService {
       return { status: 201, body: { recipe: newRecipe } };
     } catch (error: any) {
       this.logging.error('Erro ao criar receita', { error });
-      return { status: 500, body: { message: error.message } };
+      return { status: 500, body: { message: 'Erro ao criar receita' } };
     }
   }
 }
