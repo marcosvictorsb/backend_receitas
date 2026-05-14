@@ -6,7 +6,7 @@ import { getToken, registerUser } from '../helpers/auth.helper';
 let token: string;
 let user: { id: number; name: string; login: string };
 
-describe('Delete Recipe', () => {
+describe('Update Recipe', () => {
   beforeAll(async () => {
     await registerUser();
     const { token: userToken, user: userInfo } = await getToken();
@@ -14,36 +14,41 @@ describe('Delete Recipe', () => {
     user = userInfo;
   });
 
-  it('should fail to delete a recipe without authentication', async () => {
-    const response = await request(app).delete('/v1/recipes/1').expect(401);
+  it('should fail to update a recipe without authentication', async () => {
+    const response = await request(app).put('/v1/recipes/1').expect(401);
 
     expect(response.body.error).toBe('No token provided');
   });
 
-  it('should fail to delete a recipe with invalid token', async () => {
+  it('should fail to update a recipe with invalid token', async () => {
     const response = await request(app)
-      .delete('/v1/recipes/1')
+      .put('/v1/recipes/1')
       .set('Authorization', 'Bearer invalid_token')
       .expect(401);
 
     expect(response.body.error).toBe('Invalid token');
   });
 
-  it('should fail to delete a recipe with non-existing id', async () => {
+  it('should fail to update a recipe with non-existing id', async () => {
     const response = await request(app)
-      .delete('/v1/recipes/999999')
+      .put('/v1/recipes/999999')
       .set('Authorization', `Bearer ${token}`)
+      .send({
+        name: 'Updated Recipe',
+        ingredients: ['Updated Ingredient 1', 'Updated Ingredient 2'],
+        preparation_method: ['Updated Step 1', 'Updated Step 2']
+      })
       .expect(404);
 
     expect(response.body).toEqual({ message: 'Receita não encontrada' });
   });
 
-  it('should delete a recipe successfully', async () => {
+  it('should update a recipe successfully', async () => {
     const createResponse = await request(app)
       .post('/v1/recipes/')
       .set('Authorization', `Bearer ${token}`)
       .send({
-        name: 'Recipe to Delete',
+        name: 'Recipe to Update',
         ingredients: ['Ingredient 1', 'Ingredient 2'],
         preparation_method: ['Step 1', 'Step 2']
       })
@@ -51,17 +56,37 @@ describe('Delete Recipe', () => {
 
     const recipeId = createResponse.body.recipe.id;
 
-    const deleteResponse = await request(app)
-      .delete(`/v1/recipes/${recipeId}`)
+    const updateResponse = await request(app)
+      .put(`/v1/recipes/${recipeId}`)
       .set('Authorization', `Bearer ${token}`)
+      .send({
+        name: 'Updated Recipe',
+        ingredients: ['Updated Ingredient 1', 'Updated Ingredient 2'],
+        preparation_method: ['Updated Step 1', 'Updated Step 2'],
+        servings: 4,
+        preparation_time_minutes: 30,
+        id_category: 1
+      })
       .expect(200);
 
-    expect(deleteResponse.body).toEqual({
-      message: 'Receita deletada com sucesso'
+    expect(updateResponse.body).toEqual({
+      recipe: {
+        id: recipeId,
+        id_user: user.id,
+        id_category: 1,
+        name_category: 'Bolos e tortas doces',
+        name: 'Updated Recipe',
+        ingredients: ['Updated Ingredient 1', 'Updated Ingredient 2'],
+        preparation_method: ['Updated Step 1', 'Updated Step 2'],
+        servings: 4,
+        preparation_time_minutes: 30,
+        created_at: expect.any(String),
+        updated_at: expect.any(String)
+      }
     });
   });
 
-  it('should fail to delete a recipe that belongs to another user', async () => {
+  it('should fail to update a recipe that belongs to another user', async () => {
     const nameOtherUser = 'Other User';
     const loginOtherUser = `otheruser_${Date.now()}`;
     const passwordOtherUser = 'password123';
@@ -91,20 +116,30 @@ describe('Delete Recipe', () => {
 
     const recipeId = createResponse.body.recipe.id;
 
-    const deleteResponse = await request(app)
-      .delete(`/v1/recipes/${recipeId}`)
+    const updateResponse = await request(app)
+      .put(`/v1/recipes/${recipeId}`)
       .set('Authorization', `Bearer ${token}`)
+      .send({
+        name: 'Updated Recipe',
+        ingredients: ['Updated Ingredient 1', 'Updated Ingredient 2'],
+        preparation_method: ['Updated Step 1', 'Updated Step 2']
+      })
       .expect(404);
 
-    expect(deleteResponse.body).toEqual({
+    expect(updateResponse.body).toEqual({
       message: 'Receita não encontrada'
     });
   });
 
-  it('should fail to delete a recipe with invalid id', async () => {
+  it('should fail to update a recipe with invalid id', async () => {
     const response = await request(app)
-      .delete('/v1/recipes/invalid_id')
+      .put('/v1/recipes/invalid_id')
       .set('Authorization', `Bearer ${token}`)
+      .send({
+        name: 'Updated Recipe',
+        ingredients: ['Updated Ingredient 1', 'Updated Ingredient 2'],
+        preparation_method: ['Updated Step 1', 'Updated Step 2']
+      })
       .expect(400);
 
     expect(response.body).toEqual({
@@ -115,9 +150,9 @@ describe('Delete Recipe', () => {
     });
   });
 
-  it('should fail to delete a recipe without id', async () => {
+  it('should fail to update a recipe without id', async () => {
     const response = await request(app)
-      .delete('/v1/recipes/')
+      .put('/v1/recipes/')
       .set('Authorization', `Bearer ${token}`)
       .expect(404);
 
