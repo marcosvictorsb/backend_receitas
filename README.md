@@ -133,6 +133,28 @@ npm run dev
 npm run test
 ```
 
+## Testes de integracao (E2E)
+
+Antes de executar os testes de integracao, prepare o banco `receitas_e2e` com os comandos abaixo:
+
+```bash
+DB_NAME=receitas_e2e NODE_ENV=testing npx sequelize-cli db:create --env testing
+DB_NAME=receitas_e2e NODE_ENV=testing npx sequelize-cli db:migrate --env testing
+DB_NAME=receitas_e2e NODE_ENV=testing npx sequelize-cli db:seed:all --env testing
+```
+
+Depois execute os testes:
+
+```bash
+npm run test:e2e
+```
+
+Para modo watch:
+
+```bash
+npm run test:e2e:watch
+```
+
 ## Dicas de troubleshooting
 
 - Se o banco ja tiver estado antigo e voce quiser reiniciar do zero no Docker:

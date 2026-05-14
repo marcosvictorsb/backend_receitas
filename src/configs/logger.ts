@@ -13,6 +13,7 @@ class LoggerService implements ILoggerService {
 
   constructor() {
     const isProduction = process.env.NODE_ENV === 'production';
+    const isTesting = process.env.NODE_ENV === 'testing';
 
     this.logger = winston.createLogger({
       level: process.env.LOG_LEVEL || 'info',
@@ -30,7 +31,8 @@ class LoggerService implements ILoggerService {
         new winston.transports.File({
           filename: path.join('logs', 'combined.log')
         })
-      ]
+      ],
+      silent: isTesting
     });
 
     if (!isProduction) {
