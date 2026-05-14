@@ -45,7 +45,7 @@ describe('CreateRecipeService', () => {
       preparation_method: ['Test method'],
       ingredients: ['Test ingredients']
     };
-    const errorMessage = 'Database error';
+    const errorMessage = 'Erro ao criar receita';
     recipeRepositoryMock.create.mockRejectedValue(new Error(errorMessage));
 
     const { status, body } = await createRecipeServiceMock.execute(params);

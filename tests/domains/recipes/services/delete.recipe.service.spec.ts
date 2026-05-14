@@ -78,7 +78,7 @@ describe('DeleteRecipeService', () => {
       id: 1,
       id_user: 1
     };
-    const errorMessage = 'Database error';
+    const errorMessage = 'Erro ao excluir receita';
     recipeRepositoryMock.find.mockRejectedValue(new Error(errorMessage));
 
     const { status, body } = await deleteRecipeServiceMock.execute(params);

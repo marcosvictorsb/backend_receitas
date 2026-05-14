@@ -93,7 +93,7 @@ describe('SignUpService', () => {
       login: 'error_login',
       password: 'error_password'
     };
-    const errorMessage = 'Database error';
+    const errorMessage = 'Erro ao cadastrar usuário';
     userRepositoryMock.find.mockResolvedValue(null);
     userRepositoryMock.create.mockRejectedValue(new Error(errorMessage));
 

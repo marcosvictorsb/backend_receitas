@@ -112,12 +112,14 @@ describe('SignInService', () => {
       login: 'any_login',
       password: 'any_password'
     };
-    userRepositoryMock.find.mockRejectedValue(new Error('Database error'));
+    userRepositoryMock.find.mockRejectedValue(
+      new Error('Erro ao realizar login')
+    );
 
     const { status, body } = await signInServiceMock.execute(params);
 
     expect(status).toBe(500);
-    expect(body.message).toBe('Database error');
+    expect(body.message).toBe('Erro ao realizar login');
     expect(loggingMock.info).toHaveBeenCalledWith(
       'Iniciando processo de login',
       { login: params.login }
@@ -127,7 +129,7 @@ describe('SignInService', () => {
     });
     expect(userRepositoryMock.find).toHaveBeenCalledTimes(1);
     expect(loggingMock.error).toHaveBeenCalledWith('Erro ao realizar login', {
-      error: new Error('Database error')
+      error: new Error('Erro ao realizar login')
     });
   });
 });
