@@ -86,7 +86,7 @@ describe('UpdateRecipeService', () => {
       `Receita com id ${params.id} não encontrada para atualização`
     );
     expect(status).toBe(404);
-    expect(body).toEqual({ message: 'Recipe not found' });
+    expect(body).toEqual({ message: 'Receita não encontrada' });
   });
 
   it('should error if update fails', async () => {

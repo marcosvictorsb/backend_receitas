@@ -41,7 +41,7 @@ export class UpdateRecipeService {
         this.logging.info(
           `Receita com id ${id} não encontrada para atualização`
         );
-        return { status: 404, body: { message: 'Recipe not found' } };
+        return { status: 404, body: { message: 'Receita não encontrada' } };
       }
 
       const updatedRecipe = await this.recipeRepository.update(
@@ -60,7 +60,7 @@ export class UpdateRecipeService {
         this.logging.warn(
           `Receita com id ${id} não encontrada para atualização`
         );
-        return { status: 404, body: { message: 'Recipe not found' } };
+        return { status: 404, body: { message: 'Receita não encontrada' } };
       }
 
       return { status: 200, body: { recipe: updatedRecipe } };
