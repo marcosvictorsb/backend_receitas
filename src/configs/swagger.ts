@@ -29,7 +29,11 @@ export const swaggerSpec = swaggerJSDoc({
           required: ['name', 'login', 'password'],
           properties: {
             name: { type: 'string', example: 'Marcos' },
-            login: { type: 'string', example: 'any_email@com.br' },
+            login: {
+              type: 'string',
+              format: 'email',
+              example: 'any_email@com.br'
+            },
             password: { type: 'string', example: 'AnyPass0rd' }
           }
         },
@@ -41,7 +45,11 @@ export const swaggerSpec = swaggerJSDoc({
               properties: {
                 id: { type: 'number', example: 1 },
                 name: { type: 'string', example: 'Marcos' },
-                login: { type: 'string', example: 'any_email@com.br' }
+                login: {
+                  type: 'string',
+                  format: 'email',
+                  example: 'any_email@com.br'
+                }
               }
             }
           }
